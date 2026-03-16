@@ -8,6 +8,7 @@ export function Btn({ children, variant='primary', size='md', className='', ...p
     yellow:  'bg-beat-yellow text-beat-bg font-semibold hover:shadow-glow-yellow active:scale-95',
     ghost:   'card-glass text-beat-text hover:border-beat-cyan/30 active:scale-95',
     danger:  'bg-beat-coral/10 text-beat-coral border border-beat-coral/30 hover:bg-beat-coral/20',
+    yellow:  'bg-beat-yellow text-beat-bg font-semibold hover:shadow-glow-yellow active:scale-95',
     outline: 'border border-beat-border text-beat-sub hover:text-beat-text hover:border-beat-bordhi',
   }
   return (

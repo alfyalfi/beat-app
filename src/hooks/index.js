@@ -84,6 +84,12 @@ export function useSessions(group_id) {
   }, [load])
 
   const deleteSession = useCallback(async (session_id) => {
+    // Hapus attendance records terkait sesi ini
+    const attRows = await attendanceDB.getBySession(session_id, group_id)
+    for (const a of attRows) {
+      await attendanceDB.delete(a.attendance_id)
+      await enqueue('delete', 'attendance', { attendance_id: a.attendance_id, group_id })
+    }
     await sessionsDB.delete(session_id)
     await enqueue('delete', 'sessions', { session_id, group_id })
     await load()
