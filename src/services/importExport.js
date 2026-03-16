@@ -19,6 +19,7 @@ export async function importMembersFromExcel(file, group_id) {
     name:       String(row.name || '').trim(),
     instrument: String(row.instrument || '').trim(),
     angkatan:   String(row.angkatan || '').trim(),
+    jabatan:    String(row.jabatan || 'Anggota').trim(),
     status:     'active',
     joined_at:  now.split('T')[0],
     notes:      String(row.notes || '').trim(),

@@ -38,7 +38,7 @@ export default function Sessions() {
           <div className="space-y-2">
             {sessions.map(s => (
               <Link key={s.session_id} to={`/sessions/${s.session_id}`}
-                className="flex items-center justify-between bg-beat-card border border-beat-border rounded-xl px-4 py-3.5 hover:border-beat-muted transition-all">
+                className="flex items-center justify-between card-glass rounded-xl px-4 py-3.5 hover:border-beat-muted transition-all">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-body font-medium text-beat-text truncate">{s.title}</p>
                   <p className="text-xs font-body text-beat-muted">{formatDate(s.session_date)}</p>
@@ -132,7 +132,7 @@ export function AttendancePage() {
   if (!session && !loading) return (
     <div className="px-4 pt-8 text-center">
       <p className="text-beat-muted font-body text-sm">Sesi tidak ditemukan.</p>
-      <button onClick={() => navigate('/sessions')} className="mt-3 text-beat-accent text-sm font-body">
+      <button onClick={() => navigate('/sessions')} className="mt-3 text-beat-cyan text-sm font-body">
         ← Kembali ke daftar sesi
       </button>
     </div>
@@ -156,12 +156,12 @@ export function AttendancePage() {
       {/* Summary bar */}
       <div className="grid grid-cols-4 gap-2 mb-4">
         {[
-          { label: 'Hadir',  val: counts.hadir,  cls: 'text-beat-teal'   },
-          { label: 'Izin',   val: counts.izin,   cls: 'text-beat-amber'  },
+          { label: 'Hadir',  val: counts.hadir,  cls: 'text-beat-cyan'   },
+          { label: 'Izin',   val: counts.izin,   cls: 'text-beat-yellow'  },
           { label: 'Sakit',  val: counts.sakit,  cls: 'text-beat-purple' },
           { label: 'Alpha',  val: counts.alpha,  cls: 'text-beat-coral'  },
         ].map(s => (
-          <div key={s.label} className="bg-beat-card border border-beat-border rounded-xl p-2.5 text-center">
+          <div key={s.label} className="card-glass rounded-xl p-2.5 text-center">
             <div className={`text-lg font-display ${s.cls}`}>{s.val}</div>
             <div className="text-[10px] font-body text-beat-muted">{s.label}</div>
           </div>
@@ -171,7 +171,7 @@ export function AttendancePage() {
       {/* Quick mode tip */}
       {!isClosed && (
         <p className="text-xs font-body text-beat-muted mb-3 text-center">
-          Semua anggota default <span className="text-beat-teal">Hadir</span> · Tap status untuk mengubah
+          Semua anggota default <span className="text-beat-cyan">Hadir</span> · Tap status untuk mengubah
         </p>
       )}
 
@@ -197,7 +197,7 @@ export function AttendancePage() {
               </div>
               {rec.status !== 'hadir' && !isClosed && (
                 <input
-                  className="mt-2 w-full bg-beat-surface rounded-lg px-3 py-2 text-xs font-body text-beat-text placeholder-beat-muted border border-beat-border focus:outline-none focus:border-beat-accent"
+                  className="mt-2 w-full bg-beat-surface rounded-lg px-3 py-2 text-xs font-body text-beat-text placeholder-beat-muted border border-beat-border focus:outline-none focus:border-beat-cyan"
                   placeholder="Keterangan (opsional)"
                   value={rec.note}
                   onChange={e => setNote(rec.member_id, e.target.value)}

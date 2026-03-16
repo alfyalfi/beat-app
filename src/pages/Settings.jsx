@@ -117,7 +117,7 @@ export default function Settings() {
       {/* Toast */}
       {toast && (
         <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl text-sm font-body shadow-lg animate-slide-up
-          ${toast.type === 'error' ? 'bg-beat-coral text-white' : 'bg-beat-accent text-beat-bg'}`}>
+          ${toast.type === 'error' ? 'bg-beat-coral text-white' : 'bg-beat-cyan text-beat-bg'}`}>
           {toast.msg}
         </div>
       )}
@@ -136,7 +136,7 @@ export default function Settings() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-beat-teal animate-pulse-dot' : 'bg-beat-coral'}`}/>
+            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-beat-cyan animate-pulse-dot' : 'bg-beat-coral'}`}/>
             <Btn size="sm" variant="ghost" onClick={syncNow} disabled={isSyncing || !isOnline}>
               <RefreshCw size={13} className={isSyncing ? 'animate-spin' : ''}/>
               Sync
@@ -161,7 +161,7 @@ export default function Settings() {
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-body font-medium text-beat-text truncate">{g.group_name}</p>
                       {activeGroup?.group_id === g.group_id && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-beat-accent/10 text-beat-accent border border-beat-accent/20 font-body">aktif</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-beat-cyan/10 text-beat-cyan border border-beat-cyan/20 font-body">aktif</span>
                       )}
                     </div>
                     {g.description && <p className="text-xs font-body text-beat-muted truncate">{g.description}</p>}
@@ -188,8 +188,8 @@ export default function Settings() {
             {/* Import Excel */}
             <button onClick={() => xlsxRef.current?.click()}
               disabled={importing}
-              className="flex flex-col items-center gap-2 p-4 bg-beat-card border border-beat-border rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <Upload size={20} className="text-beat-teal"/>
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
+              <Upload size={20} className="text-beat-cyan"/>
               <span className="text-xs font-body text-beat-sub text-center">
                 {importing ? 'Mengimport...' : 'Import Anggota\nfrom Excel'}
               </span>
@@ -198,21 +198,21 @@ export default function Settings() {
 
             {/* Export Excel */}
             <button onClick={() => exportGroupToExcel(activeGroup.group_id, activeGroup.group_name)}
-              className="flex flex-col items-center gap-2 p-4 bg-beat-card border border-beat-border rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <FileSpreadsheet size={20} className="text-beat-amber"/>
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
+              <FileSpreadsheet size={20} className="text-beat-yellow"/>
               <span className="text-xs font-body text-beat-sub text-center">Export Data\nke Excel</span>
             </button>
 
             {/* Backup JSON */}
             <button onClick={handleBackup}
-              className="flex flex-col items-center gap-2 p-4 bg-beat-card border border-beat-border rounded-xl hover:border-beat-muted transition-all active:scale-95">
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
               <Download size={20} className="text-beat-purple"/>
               <span className="text-xs font-body text-beat-sub text-center">Backup JSON</span>
             </button>
 
             {/* Restore */}
             <button onClick={() => fileRef.current?.click()}
-              className="flex flex-col items-center gap-2 p-4 bg-beat-card border border-beat-border rounded-xl hover:border-beat-muted transition-all active:scale-95">
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
               <Database size={20} className="text-beat-coral"/>
               <span className="text-xs font-body text-beat-sub text-center">Restore\nBackup</span>
             </button>
@@ -221,7 +221,7 @@ export default function Settings() {
 
           {/* Excel template hint */}
           <p className="text-xs font-body text-beat-muted mt-3 text-center">
-            Template Excel: kolom <code className="text-beat-accent">name</code>, <code className="text-beat-accent">instrument</code>, <code className="text-beat-accent">angkatan</code>
+            Template Excel: kolom <code className="text-beat-cyan">name</code>, <code className="text-beat-cyan">instrument</code>, <code className="text-beat-cyan">angkatan</code>
           </p>
         </div>
       )}

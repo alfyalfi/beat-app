@@ -37,7 +37,7 @@ function StatModal({ member, sessions, group_id, onClose }) {
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-beat-sub font-body">Sesi</label>
         <select value={sessionId} onChange={e => setSessionId(e.target.value)}
-          className="w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body focus:outline-none focus:border-beat-accent transition-colors">
+          className="w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
           {sessions.map(s => (
             <option key={s.session_id} value={s.session_id}>
               {s.title} — {formatDate(s.session_date)}
@@ -83,7 +83,7 @@ function MemberStatCard({ member, group_id }) {
       <button
         className="w-full flex items-center gap-3 px-4 py-3 hover:bg-beat-surface/50 transition-colors"
         onClick={() => setExpanded(e => !e)}>
-        <div className="w-9 h-9 rounded-full bg-beat-surface border border-beat-border flex items-center justify-center text-sm font-display text-beat-accent flex-shrink-0">
+        <div className="w-9 h-9 rounded-full bg-beat-surface border border-beat-border flex items-center justify-center text-sm font-display text-beat-cyan flex-shrink-0">
           {member.name[0]}
         </div>
         <div className="flex-1 text-left min-w-0">
@@ -93,7 +93,7 @@ function MemberStatCard({ member, group_id }) {
         <div className="flex items-center gap-3">
           {avg !== null && (
             <div className="text-right">
-              <div className="text-base font-display text-beat-accent">{avg}</div>
+              <div className="text-base font-display text-beat-cyan">{avg}</div>
               <div className="text-[10px] font-body text-beat-muted">rata-rata</div>
             </div>
           )}
@@ -162,7 +162,7 @@ export default function Stats() {
             {activeMembers.map(m => (
               <button key={m.member_id} onClick={() => setEvalModal(m)}
                 className="w-full flex items-center gap-3 px-4 py-3 bg-beat-surface rounded-xl hover:bg-beat-border transition-colors text-left">
-                <div className="w-8 h-8 rounded-full bg-beat-card border border-beat-border flex items-center justify-center text-sm font-display text-beat-accent">
+                <div className="w-8 h-8 rounded-full bg-beat-card border border-beat-border flex items-center justify-center text-sm font-display text-beat-cyan">
                   {m.name[0]}
                 </div>
                 <div>

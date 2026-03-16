@@ -2,29 +2,69 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 @layer base {
   * { box-sizing: border-box; }
+
   body {
-    background-color: #0a0a0a;
-    color: #e5e5e5;
+    background-color: #050508;
+    color: #e8e8f0;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    min-height: 100vh;
   }
+
   input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
-    background: #2a2a2a;
-    height: 6px;
-    border-radius: 3px;
+    background: #1e1e2e;
+    height: 4px;
+    border-radius: 2px;
   }
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: currentColor;
     cursor: pointer;
-    border: 2px solid #0a0a0a;
+    border: 2px solid #050508;
+    box-shadow: 0 0 8px currentColor;
   }
-  select option { background-color: #1a1a1a; }
+  select option { background-color: #0d0d14; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 2px; }
+}
+
+@layer components {
+  .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,229,255,0.12);
+  }
+  .glass-yellow {
+    background: rgba(255,230,0,0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,230,0,0.15);
+  }
+  .neon-text-cyan  { text-shadow: 0 0 10px rgba(0,229,255,0.8),  0 0 30px rgba(0,229,255,0.4); }
+  .neon-text-yellow{ text-shadow: 0 0 10px rgba(255,230,0,0.8),   0 0 30px rgba(255,230,0,0.4); }
+  .neon-border-cyan  { box-shadow: 0 0 0 1px rgba(0,229,255,0.4), 0 0 16px rgba(0,229,255,0.15); }
+  .neon-border-yellow{ box-shadow: 0 0 0 1px rgba(255,230,0,0.4), 0 0 16px rgba(255,230,0,0.15); }
+  .card-glass {
+    background: rgba(17,17,25,0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(0,229,255,0.1);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(0,229,255,0.06);
+  }
 }
