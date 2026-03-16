@@ -5,27 +5,68 @@ import { generateId, downloadBlob, dateStamp } from '../utils/helpers'
 export async function importMembersFromExcel(file, group_id) {
   const buffer = await file.arrayBuffer()
   const wb     = XLSX.read(buffer)
-  const rows   = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
-  if (!rows.length) throw new Error('File kosong')
 
+  // Baca raw rows dulu untuk dapat header asli
+  const sheet  = wb.Sheets[wb.SheetNames[0]]
+  const rawRows = XLSX.utils.sheet_to_json(sheet, { raw: false })
+  if (!rawRows.length) throw new Error('File kosong atau tidak ada data')
+
+  // Normalisasi semua key: lowercase + trim + hapus spasi
+  // Ini agar "Name", "NAMA", "nama lengkap" semua bisa dideteksi
+  const ALIAS = {
+    name:       ['name','nama','nama lengkap','nama anggota','full name'],
+    instrument: ['instrument','instrumen','alat musik','posisi musik'],
+    jabatan:    ['jabatan','posisi','role','position'],
+    angkatan:   ['angkatan','tahun','batch','year','tahun masuk'],
+    notes:      ['notes','catatan','note','keterangan'],
+  }
+
+  // Buat mapping dari header Excel → field internal
+  const firstRow = rawRows[0]
+  const headerMap = {}
+  Object.keys(firstRow).forEach(header => {
+    const normalized = header.toLowerCase().trim()
+    Object.entries(ALIAS).forEach(([field, aliases]) => {
+      if (aliases.includes(normalized) || normalized === field) {
+        headerMap[header] = field
+      }
+    })
+  })
+
+  // Cek kolom wajib
+  const mappedFields = Object.values(headerMap)
   const required = ['name', 'instrument']
-  const missing  = required.filter(k => !rows[0]?.[k])
-  if (missing.length) throw new Error(`Kolom wajib tidak ditemukan: ${missing.join(', ')}`)
+  const missing  = required.filter(f => !mappedFields.includes(f))
+  if (missing.length) {
+    const missingLabels = missing.map(f => f === 'name' ? 'name/nama' : 'instrument/instrumen')
+    throw new Error(
+      `Kolom wajib tidak ditemukan: ${missingLabels.join(', ')}\n` +
+      `Header yang terdeteksi: ${Object.keys(firstRow).join(', ')}`
+    )
+  }
+
+  // Helper ambil nilai dengan fallback ke semua alias
+  function getField(row, field) {
+    const header = Object.keys(headerMap).find(h => headerMap[h] === field)
+    return header ? String(row[header] || '').trim() : ''
+  }
 
   const now = new Date().toISOString()
-  return rows.map(row => ({
-    member_id:  generateId('MBR'),
-    group_id,
-    name:       String(row.name || '').trim(),
-    instrument: String(row.instrument || '').trim(),
-    angkatan:   String(row.angkatan || '').trim(),
-    jabatan:    String(row.jabatan || 'Anggota').trim(),
-    status:     'active',
-    joined_at:  now.split('T')[0],
-    notes:      String(row.notes || '').trim(),
-    created_at: now,
-    updated_at: now,
-  }))
+  return rawRows
+    .filter(row => getField(row, 'name'))  // skip baris kosong
+    .map(row => ({
+      member_id:  generateId('MBR'),
+      group_id,
+      name:       getField(row, 'name'),
+      instrument: getField(row, 'instrument') || 'Lainnya',
+      jabatan:    getField(row, 'jabatan')    || 'Anggota',
+      angkatan:   getField(row, 'angkatan'),
+      notes:      getField(row, 'notes'),
+      status:     'active',
+      joined_at:  now.split('T')[0],
+      created_at: now,
+      updated_at: now,
+    }))
 }
 
 export async function exportGroupToExcel(group_id, group_name) {
