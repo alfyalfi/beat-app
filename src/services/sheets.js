@@ -1,17 +1,15 @@
-// Google Sheets API Service
-// Requires: VITE_SHEETS_API_KEY and VITE_SPREADSHEET_ID in .env
+import { getToken } from './auth'
 
-const API_KEY     = import.meta.env.VITE_SHEETS_API_KEY     || ''
-const SPREADSHEET = import.meta.env.VITE_SPREADSHEET_ID     || ''
+const API_KEY     = import.meta.env.VITE_SHEETS_API_KEY  || ''
+const SPREADSHEET = import.meta.env.VITE_SPREADSHEET_ID  || ''
 const BASE        = 'https://sheets.googleapis.com/v4/spreadsheets'
 
-// Column order per sheet (must match Sheets header row)
 const COLUMNS = {
   groups: [
     'group_id','group_name','description','is_active','created_at','updated_at'
   ],
   members: [
-    'member_id','group_id','name','instrument','angkatan',
+    'member_id','group_id','name','instrument','jabatan','angkatan',
     'status','joined_at','notes','created_at','updated_at'
   ],
   sessions: [
@@ -33,14 +31,13 @@ const STATS_SCORE_KEYS = new Set(['loyalitas','skill','kreativitas','attitude','
 
 function recordToRow(table, obj) {
   return COLUMNS[table].map(col => {
-    // stats_history stores scores nested; flatten for Sheets
     if (table === 'stats_history' && STATS_SCORE_KEYS.has(col)) {
       return obj.scores?.[col] ?? obj[col] ?? ''
     }
     const v = obj[col]
     if (v === undefined || v === null) return ''
     if (typeof v === 'object') return JSON.stringify(v)
-    return v
+    return String(v)
   })
 }
 
@@ -59,71 +56,135 @@ function rowToRecord(table, row) {
   return obj
 }
 
+function authHeaders() {
+  const token = getToken()
+  if (!token) throw new Error('Belum login Google. Silakan login dulu.')
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
+  }
+}
+
+// ── Read ──────────────────────────────────────────────────────
 async function getRows(sheet) {
-  if (!API_KEY || !SPREADSHEET) return []
+  if (!isConfigured()) return []
   const url = `${BASE}/${SPREADSHEET}/values/${sheet}!A2:Z?key=${API_KEY}`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Sheets read error: ${res.status}`)
+  const res  = await fetch(url)
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(`Sheets read error ${res.status}: ${err.error?.message || ''}`)
+  }
   const data = await res.json()
   return (data.values ?? []).map(row => rowToRecord(sheet, row))
 }
 
+// ── Append (baris baru) ───────────────────────────────────────
 async function appendRow(sheet, obj) {
-  if (!API_KEY || !SPREADSHEET) return
-  const token = getOAuthToken()
-  if (!token) return
-  const row = recordToRow(sheet, obj)
-  const url = `${BASE}/${SPREADSHEET}/values/${sheet}!A1:append?valueInputOption=RAW&key=${API_KEY}`
+  const url = `${BASE}/${SPREADSHEET}/values/${sheet}!A1:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ values: [recordToRow(sheet, obj)] }),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(`Sheets append error ${res.status}: ${err.error?.message || ''}`)
+  }
+}
+
+// ── Update (baris existing) ────────────────────────────────────
+async function updateRow(sheet, obj) {
+  const pkCol  = COLUMNS[sheet][0]
+  const rows   = await getRows(sheet)
+  const idx    = rows.findIndex(r => r[pkCol] === obj[pkCol])
+  if (idx === -1) { await appendRow(sheet, obj); return }
+  const rowNum = idx + 2
+  const range  = `${sheet}!A${rowNum}`
+  const url    = `${BASE}/${SPREADSHEET}/values/${range}?valueInputOption=RAW`
+  const res    = await fetch(url, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify({ values: [recordToRow(sheet, obj)] }),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(`Sheets update error ${res.status}: ${err.error?.message || ''}`)
+  }
+}
+
+// ── Delete (tandai kosong di kolom deleted_at) ─────────────────
+async function deleteRow(sheet, pkValue) {
+  const rows   = await getRows(sheet)
+  const pkCol  = COLUMNS[sheet][0]
+  const idx    = rows.findIndex(r => r[pkCol] === pkValue)
+  if (idx === -1) return
+  // Hapus baris dengan batchUpdate DeleteDimension
+  const rowIdx = idx + 1 // 0-indexed, +1 karena header
+  const url    = `${BASE}/${SPREADSHEET}:batchUpdate`
   await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ values: [row] })
+    headers: authHeaders(),
+    body: JSON.stringify({
+      requests: [{
+        deleteDimension: {
+          range: {
+            sheetId:    await getSheetId(sheet),
+            dimension:  'ROWS',
+            startIndex: rowIdx,
+            endIndex:   rowIdx + 1,
+          }
+        }
+      }]
+    }),
   })
 }
 
-async function updateRow(sheet, obj) {
-  if (!API_KEY || !SPREADSHEET) return
-  const token = getOAuthToken()
-  if (!token) return
-  const pkCol = COLUMNS[sheet][0]
-  // Find row number by reading all data first
-  const rows = await getRows(sheet)
-  const idx  = rows.findIndex(r => r[pkCol] === obj[pkCol])
-  if (idx === -1) { await appendRow(sheet, obj); return }
-  const rowNum = idx + 2 // +1 header, +1 1-indexed
-  const row = recordToRow(sheet, obj)
-  const range = `${sheet}!A${rowNum}`
-  const url = `${BASE}/${SPREADSHEET}/values/${range}?valueInputOption=RAW&key=${API_KEY}`
-  await fetch(url, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ values: [row] })
+// ── Ambil sheetId numerik dari nama tab ───────────────────────
+const sheetIdCache = {}
+async function getSheetId(sheetName) {
+  if (sheetIdCache[sheetName]) return sheetIdCache[sheetName]
+  const url = `${BASE}/${SPREADSHEET}?fields=sheets.properties&key=${API_KEY}`
+  const res = await fetch(url)
+  const data = await res.json()
+  data.sheets?.forEach(s => {
+    sheetIdCache[s.properties.title] = s.properties.sheetId
   })
+  return sheetIdCache[sheetName] ?? 0
 }
 
-async function deleteRow(sheet, pkValue) {
-  // Sheets API doesn't support delete easily; we mark as deleted instead
-  // Full delete requires batchUpdate with DeleteDimension — simplified here
-  console.log(`Sheets: mark-delete ${sheet}/${pkValue}`)
+// ── Inisialisasi header di semua sheet (jalankan sekali) ───────
+export async function initSheetHeaders() {
+  for (const [sheet, cols] of Object.entries(COLUMNS)) {
+    const url = `${BASE}/${SPREADSHEET}/values/${sheet}!A1:${String.fromCharCode(65 + cols.length - 1)}1?key=${API_KEY}`
+    const res = await fetch(url)
+    const data = await res.json()
+    const existing = data.values?.[0] ?? []
+    // Jika header kosong, isi
+    if (existing.length === 0) {
+      const writeUrl = `${BASE}/${SPREADSHEET}/values/${sheet}!A1?valueInputOption=RAW`
+      await fetch(writeUrl, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ values: [cols] }),
+      })
+    }
+  }
 }
 
-function getOAuthToken() {
-  return localStorage.getItem('beat_oauth_token') || null
-}
-
-export function setOAuthToken(token) {
-  localStorage.setItem('beat_oauth_token', token)
+function isConfigured() {
+  return !!(API_KEY && SPREADSHEET)
 }
 
 export const sheetsAPI = {
   getRows,
   upsertRow: async (sheet, obj) => {
-    const pkCol = COLUMNS[sheet][0]
-    const rows  = await getRows(sheet)
+    const pkCol  = COLUMNS[sheet][0]
+    const rows   = await getRows(sheet)
     const exists = rows.some(r => r[pkCol] === obj[pkCol])
     if (exists) await updateRow(sheet, obj)
     else        await appendRow(sheet, obj)
   },
   deleteRow,
-  isConfigured: () => !!(API_KEY && SPREADSHEET),
+  initHeaders: initSheetHeaders,
+  isConfigured,
 }

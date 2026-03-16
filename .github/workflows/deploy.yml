@@ -21,6 +21,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_SHEETS_API_KEY:  ${{ secrets.VITE_SHEETS_API_KEY }}
+          VITE_SPREADSHEET_ID:  ${{ secrets.VITE_SPREADSHEET_ID }}
+          VITE_OAUTH_CLIENT_ID: ${{ secrets.VITE_OAUTH_CLIENT_ID }}
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

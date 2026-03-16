@@ -1,3 +1,4 @@
+import { GoogleLoginCard } from '../components/ui/GoogleLoginCard'
 import { useState, useRef } from 'react'
 import { Plus, Pencil, Trash2, Download, Upload, Database, RefreshCw, FileSpreadsheet } from 'lucide-react'
 import { useGroup, useSync } from '../context/AppContext'
@@ -122,28 +123,8 @@ export default function Settings() {
         </div>
       )}
 
-      {/* Sync status */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-body font-medium text-beat-text">Sinkronisasi</p>
-            <p className="text-xs font-body text-beat-muted mt-0.5">
-              {isOnline
-                ? pendingCount > 0
-                  ? `${pendingCount} perubahan menunggu sync`
-                  : 'Semua data tersinkronisasi'
-                : 'Offline — perubahan disimpan lokal'}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-beat-cyan animate-pulse-dot' : 'bg-beat-coral'}`}/>
-            <Btn size="sm" variant="ghost" onClick={syncNow} disabled={isSyncing || !isOnline}>
-              <RefreshCw size={13} className={isSyncing ? 'animate-spin' : ''}/>
-              Sync
-            </Btn>
-          </div>
-        </div>
-      </Card>
+      {/* Google Sheets sync + login */}
+      <GoogleLoginCard/>
 
       {/* Groups management */}
       <div>
