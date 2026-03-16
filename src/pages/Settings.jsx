@@ -124,7 +124,7 @@ export default function Settings() {
       )}
 
       {/* Google Sheets sync + login */}
-      <GoogleLoginCard/>
+      <GoogleLoginCard onPullDone={refreshGroups}/>
 
       {/* Groups management */}
       <div>
