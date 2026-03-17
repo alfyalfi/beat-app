@@ -190,29 +190,30 @@ function ExportSection({ exportRef, children, title, subtitle }) {
   return (
     <div ref={exportRef} data-export-root
       style={{
-        background: '#050508',
-        padding: '24px',
+        background: '#ffffff',
+        border: '1px solid rgba(0,0,0,0.08)',
         borderRadius: '16px',
-        fontFamily: 'DM Sans, sans-serif',
+        padding: '20px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05)',
+        fontFamily: 'Inter, system-ui, sans-serif',
       }}>
-      {/* Watermark header */}
-      <div style={{ marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid rgba(0,229,255,0.12)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontFamily: 'Orbitron, monospace', fontSize: '12px', fontWeight: 900,
-            color: '#00e5ff', letterSpacing: '0.2em', textShadow: '0 0 10px rgba(0,229,255,0.8)' }}>
-            MENTOR
-          </span>
-          <span style={{ fontSize: '11px', color: '#44445a', fontFamily: 'DM Sans, sans-serif' }}>
-            {new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}
+      {title && (
+        <div style={{ marginBottom: '14px', paddingBottom: '12px', borderBottom: '1px solid rgba(0,0,0,0.07)',
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+          <div>
+            <span style={{ fontFamily: 'Space Grotesk, sans-serif', fontSize: '10px', fontWeight: 700,
+              color: '#0077a8', letterSpacing: '0.15em', textTransform: 'uppercase',
+              display: 'block', marginBottom: '4px' }}>
+              MENTOR
+            </span>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: '#0f1117', margin: 0, lineHeight: 1.3 }}>{title}</p>
+            {subtitle && <p style={{ fontSize: '11px', color: '#9aa0ad', margin: '2px 0 0 0' }}>{subtitle}</p>}
+          </div>
+          <span style={{ fontSize: '11px', color: '#9aa0ad', whiteSpace: 'nowrap', marginTop: '2px' }}>
+            {new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}
           </span>
         </div>
-        {title && (
-          <div style={{ marginTop: '6px' }}>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#e8e8f0', margin: 0 }}>{title}</p>
-            {subtitle && <p style={{ fontSize: '11px', color: '#8888aa', margin: '2px 0 0 0' }}>{subtitle}</p>}
-          </div>
-        )}
-      </div>
+      )}
       {children}
     </div>
   )

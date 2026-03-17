@@ -1,15 +1,12 @@
 /**
- * exportImage.js
- * Export a DOM element to a clean PNG using html2canvas.
- * Renders on a dark background matching the app theme.
+ * exportImage.js — export DOM element to clean PNG (light theme)
  */
-
 export async function exportToPNG(element, filename = 'mentor-stats.png') {
   const html2canvas = (await import('html2canvas')).default
 
   const canvas = await html2canvas(element, {
-    backgroundColor: '#050508',
-    scale: 2,                    // retina quality
+    backgroundColor: '#ffffff',
+    scale: 2,
     useCORS: true,
     logging: false,
     scrollX: 0,
@@ -17,11 +14,16 @@ export async function exportToPNG(element, filename = 'mentor-stats.png') {
     windowWidth: element.scrollWidth,
     windowHeight: element.scrollHeight,
     onclone: (clonedDoc) => {
-      // Remove any elements marked data-export-hide
+      // Remove elements marked data-export-hide
       clonedDoc.querySelectorAll('[data-export-hide]').forEach(el => el.remove())
-      // Force full opacity on all children
+      // Ensure all CSS variables resolve correctly in clone
+      const root = clonedDoc.documentElement
+      const theme = document.documentElement.getAttribute('data-theme')
+      if (theme) root.setAttribute('data-theme', theme)
+      // Pause animations
       clonedDoc.querySelectorAll('[data-export-root] *').forEach(el => {
         el.style.animationPlayState = 'paused'
+        el.style.transition = 'none'
       })
     }
   })
@@ -31,7 +33,9 @@ export async function exportToPNG(element, filename = 'mentor-stats.png') {
     const a   = document.createElement('a')
     a.href     = url
     a.download = filename
+    document.body.appendChild(a)
     a.click()
+    document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }, 'image/png')
 }
