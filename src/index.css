@@ -68,3 +68,37 @@
     box-shadow: 0 4px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(0,229,255,0.06);
   }
 }
+
+@layer utilities {
+  /* Smooth page transitions */
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.25s ease-out;
+  }
+
+  /* Skeleton shimmer */
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+  .animate-pulse {
+    background: linear-gradient(
+      90deg,
+      rgba(30,30,46,0.8) 25%,
+      rgba(42,42,64,0.9) 50%,
+      rgba(30,30,46,0.8) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Tablet/desktop layout improvements */
+  @media (min-width: 640px) {
+    .max-w-2xl { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 768px) {
+    main { padding-top: 0.5rem; }
+  }
+}

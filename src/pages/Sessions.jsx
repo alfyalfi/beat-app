@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Plus, ChevronLeft, Save, Lock, Pencil, Trash2, LockOpen, MoreVertical } from 'lucide-react'
 import { useGroup } from '../context/AppContext'
 import { useSessions, useAttendance, useMembers } from '../hooks'
-import { Btn, Card, Modal, Input, Textarea, EmptyState, Spinner, SectionTitle, Badge } from '../components/ui'
+import { Btn, Card, Modal, Input, Textarea, EmptyState, SkeletonList, Spinner, SectionTitle, Badge } from '../components/ui'
 import { formatDate, cycleStatus } from '../utils/helpers'
 import { ATTENDANCE_STATUS, STATUS_COLOR } from '../utils/constants'
 
@@ -116,7 +116,7 @@ export default function Sessions() {
         </Btn>
       </div>
 
-      {loading ? <Spinner/> : sessions.length === 0
+      {loading ? <SkeletonList count={3}/> : sessions.length === 0
         ? <EmptyState icon="📋" title="Belum ada sesi" subtitle="Buat sesi latihan pertama untuk mulai absensi"/>
         : (
           <div className="space-y-2">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { membersDB, sessionsDB, attendanceDB, statsDB } from '../services/indexeddb'
+import { membersDB, sessionsDB, attendanceDB, statsDB, db } from '../services/indexeddb'
 import { enqueue } from '../services/sync'
 import { generateId, attendanceId, statId } from '../utils/helpers'
 import { DEFAULT_SCORES } from '../utils/constants'
@@ -89,6 +89,15 @@ export function useSessions(group_id) {
     for (const a of attRows) {
       await attendanceDB.delete(a.attendance_id)
       await enqueue('delete', 'attendance', { attendance_id: a.attendance_id, group_id })
+    }
+    // Hapus stats_history terkait sesi ini
+    const statRows = await db.stats_history
+      .where('session_id').equals(session_id)
+      .filter(s => s.group_id === group_id)
+      .toArray()
+    for (const s of statRows) {
+      await statsDB.delete(s.stat_id)
+      await enqueue('delete', 'stats_history', { stat_id: s.stat_id, group_id })
     }
     await sessionsDB.delete(session_id)
     await enqueue('delete', 'sessions', { session_id, group_id })

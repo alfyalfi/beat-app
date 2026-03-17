@@ -13,7 +13,6 @@ export function GroupProvider({ children }) {
   const loadGroups = useCallback(async () => {
     const gs = await groupsDB.getAll()
     setGroups(gs)
-    // Restore last active group
     const lastId = localStorage.getItem('beat_active_group')
     const found  = gs.find(g => g.group_id === lastId) ?? gs[0] ?? null
     setActiveGroupState(found)
@@ -30,7 +29,6 @@ export function GroupProvider({ children }) {
   const refreshGroups = useCallback(async () => {
     const gs = await groupsDB.getAll()
     setGroups(gs)
-    // If active group was updated, refresh it
     if (activeGroup) {
       const updated = gs.find(g => g.group_id === activeGroup.group_id)
       if (updated) setActiveGroupState(updated)
@@ -53,6 +51,7 @@ export function SyncProvider({ children }) {
   const [isOnline,     setIsOnline]     = useState(navigator.onLine)
   const [pendingCount, setPendingCount] = useState(0)
   const [isSyncing,    setIsSyncing]    = useState(false)
+  const [lastSyncedAt, setLastSyncedAt] = useState(null)
 
   useEffect(() => {
     initSync()
@@ -66,11 +65,12 @@ export function SyncProvider({ children }) {
     }
   }, [])
 
+  // Poll pending count setiap 5 detik
   useEffect(() => {
     const interval = setInterval(async () => {
       const c = await syncQueueDB.countPending()
       setPendingCount(c)
-    }, 4000)
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 
@@ -80,10 +80,11 @@ export function SyncProvider({ children }) {
     setIsSyncing(false)
     const c = await syncQueueDB.countPending()
     setPendingCount(c)
+    if (c === 0) setLastSyncedAt(new Date())
   }, [])
 
   return (
-    <SyncCtx.Provider value={{ isOnline, pendingCount, isSyncing, syncNow }}>
+    <SyncCtx.Provider value={{ isOnline, pendingCount, isSyncing, syncNow, lastSyncedAt }}>
       {children}
     </SyncCtx.Provider>
   )

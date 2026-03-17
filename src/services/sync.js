@@ -2,7 +2,7 @@ import { db, syncQueueDB, groupsDB, membersDB, sessionsDB, attendanceDB, statsDB
 import { sheetsAPI } from './sheets'
 import { generateId } from '../utils/helpers'
 
-const SYNC_INTERVAL = 30_000
+const SYNC_INTERVAL = 15_000   // 15 detik — lebih responsif
 let timer          = null
 let syncing        = false
 let listenersAdded = false
@@ -130,6 +130,12 @@ export function initSync() {
   window.addEventListener('offline', () => {
     clearInterval(timer)
     timer = null
+  })
+  // Sync saat tab kembali aktif (pindah tab → kembali)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && navigator.onLine) {
+      runSync()
+    }
   })
   if (navigator.onLine) {
     runSync()

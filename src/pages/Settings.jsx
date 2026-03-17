@@ -202,7 +202,7 @@ export default function Settings() {
 
           {/* Excel template hint */}
           <p className="text-xs font-body text-beat-muted mt-3 text-center">
-            Template Excel: kolom <code className="text-beat-cyan">name</code>, <code className="text-beat-cyan">instrument</code>, <code className="text-beat-cyan">angkatan</code>
+            Template Excel: kolom <code className="text-beat-cyan">name</code>, <code className="text-beat-cyan">instrument</code>, <code className="text-beat-cyan">jabatan</code>, <code className="text-beat-cyan">angkatan</code>
           </p>
         </div>
       )}

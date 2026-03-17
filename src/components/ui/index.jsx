@@ -8,7 +8,6 @@ export function Btn({ children, variant='primary', size='md', className='', ...p
     yellow:  'bg-beat-yellow text-beat-bg font-semibold hover:shadow-glow-yellow active:scale-95',
     ghost:   'card-glass text-beat-text hover:border-beat-cyan/30 active:scale-95',
     danger:  'bg-beat-coral/10 text-beat-coral border border-beat-coral/30 hover:bg-beat-coral/20',
-    yellow:  'bg-beat-yellow text-beat-bg font-semibold hover:shadow-glow-yellow active:scale-95',
     outline: 'border border-beat-border text-beat-sub hover:text-beat-text hover:border-beat-bordhi',
   }
   return (
@@ -139,6 +138,29 @@ export function Spinner() {
     <div className="flex items-center justify-center py-12">
       <div className="w-8 h-8 border-2 border-beat-border border-t-beat-cyan rounded-full animate-spin"
            style={{ boxShadow: '0 0 12px rgba(0,229,255,0.4)' }}/>
+    </div>
+  )
+}
+
+export function SkeletonCard({ lines = 2 }) {
+  return (
+    <div className="card-glass rounded-xl p-4 animate-pulse">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-full bg-beat-border flex-shrink-0"/>
+        <div className="flex-1 space-y-2">
+          <div className="h-3 bg-beat-border rounded w-2/3"/>
+          {lines > 1 && <div className="h-2 bg-beat-border rounded w-1/3"/>}
+        </div>
+        <div className="w-12 h-5 bg-beat-border rounded-full"/>
+      </div>
+    </div>
+  )
+}
+
+export function SkeletonList({ count = 3 }) {
+  return (
+    <div className="space-y-2">
+      {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i}/>)}
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { enqueue } from '../services/sync'
 import { importMembersFromExcel } from '../services/importExport'
 import {
   Btn, Card, Modal, Input, Select, Textarea,
-  EmptyState, Spinner, SectionTitle, Badge
+  EmptyState, SkeletonList, SectionTitle, Badge
 } from '../components/ui'
 import { INSTRUMENTS, MEMBER_STATUS, JABATAN } from '../utils/constants'
 
@@ -144,7 +144,7 @@ export default function Members() {
 
       {/* Import hint */}
       <div className="mb-3 px-3 py-2 rounded-lg bg-beat-surface border border-beat-border text-[11px] font-body text-beat-muted">
-        Template Excel: kolom <span className="text-beat-cyan font-mono">name</span>, <span className="text-beat-cyan font-mono">instrument</span>, <span className="text-beat-cyan font-mono">jabatan</span>, <span className="text-beat-cyan font-mono">angkatan</span>
+        Template Excel: kolom <span className="text-beat-cyan font-mono">name</span>, <span className="text-beat-cyan font-mono">instrument</span>, <span className="text-beat-cyan font-mono">jabatan</span>, <span className="text-beat-cyan font-mono">angkatan</span>, <span className="text-beat-cyan font-mono">status</span>
       </div>
 
       {/* Search + filter */}
@@ -170,7 +170,7 @@ export default function Members() {
         </div>
       </div>
 
-      {loading ? <Spinner/> : filtered.length === 0
+      {loading ? <SkeletonList count={4}/> : filtered.length === 0
         ? <EmptyState icon="🎸" title="Tidak ada anggota" subtitle="Tambah anggota atau ubah filter"/>
         : (
           <div className="space-y-2">

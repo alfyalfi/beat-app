@@ -1,21 +1,22 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Home, ClipboardList, Users, BarChart2, Settings, Wifi, WifiOff, RefreshCw } from 'lucide-react'
 import { useGroup, useSync } from '../../context/AppContext'
 import { useState, useEffect, useRef } from 'react'
 
 const NAV = [
-  { to: '/',         icon: Home,          label: 'Home'    },
-  { to: '/sessions', icon: ClipboardList, label: 'Sesi'    },
-  { to: '/members',  icon: Users,         label: 'Anggota' },
-  { to: '/stats',    icon: BarChart2,     label: 'Stats'   },
-  { to: '/settings', icon: Settings,      label: 'Kelola'  },
+  { to: '/',          icon: Home,          label: 'Grup',    end: true },
+  { to: '/sessions',  icon: ClipboardList, label: 'Sesi'    },
+  { to: '/members',   icon: Users,         label: 'Anggota' },
+  { to: '/stats',     icon: BarChart2,     label: 'Stats'   },
+  { to: '/settings',  icon: Settings,      label: 'Kelola'  },
 ]
 
 export function Navbar() {
   const { activeGroup, groups, setActiveGroup } = useGroup()
-  const { isOnline, pendingCount, isSyncing, syncNow } = useSync()
+  const { isOnline, pendingCount, isSyncing, syncNow, lastSyncedAt } = useSync()
   const [open, setOpen] = useState(false)
   const dropRef = useRef(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     function handleClick(e) {
@@ -29,12 +30,10 @@ export function Navbar() {
     <header className="sticky top-0 z-40 bg-beat-bg/80 backdrop-blur-xl border-b border-beat-border"
       style={{ boxShadow: '0 1px 0 rgba(0,229,255,0.08)' }}>
       <div className="flex items-center justify-between px-4 h-14 max-w-2xl mx-auto">
-        {/* Logo */}
-        <span className="font-display font-black text-xl tracking-widest text-beat-cyan neon-text-cyan">
+        <NavLink to="/" className="font-display font-black text-xl tracking-widest text-beat-cyan neon-text-cyan">
           BEAT
-        </span>
+        </NavLink>
 
-        {/* Group Switcher */}
         <div className="relative" ref={dropRef}>
           <button onClick={() => setOpen(!open)}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg card-glass text-beat-text text-xs font-body hover:border-beat-cyan/30 transition-all">
@@ -50,7 +49,7 @@ export function Navbar() {
                 : groups.map(g => (
                   <button key={g.group_id}
                     className={`w-full text-left px-4 py-3 text-xs font-body hover:bg-beat-cyan/5 transition-colors border-b border-beat-border last:border-0 ${g.group_id === activeGroup?.group_id ? 'text-beat-cyan' : 'text-beat-text'}`}
-                    onClick={() => { setActiveGroup(g); setOpen(false) }}>
+                    onClick={() => { setActiveGroup(g); setOpen(false); navigate('/dashboard') }}>
                     {g.group_id === activeGroup?.group_id && <span className="mr-2 text-beat-cyan">▶</span>}
                     {g.group_name}
                   </button>
@@ -59,10 +58,15 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Sync indicator */}
         <button onClick={syncNow} disabled={isSyncing}
           className="flex items-center gap-1.5 text-xs font-body transition-colors p-2 rounded-lg hover:bg-beat-surface"
-          title={isOnline ? `${pendingCount} pending` : 'Offline'}>
+          title={
+            !isOnline ? 'Offline' :
+            isSyncing ? 'Menyinkronkan...' :
+            pendingCount > 0 ? `${pendingCount} perubahan pending` :
+            lastSyncedAt ? `Tersinkron ${lastSyncedAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}` :
+            'Klik untuk sync'
+          }>
           {isOnline
             ? <Wifi size={14} className={pendingCount > 0 ? 'text-beat-yellow' : 'text-beat-cyan'}
                 style={{ filter: `drop-shadow(0 0 4px ${pendingCount > 0 ? '#ffe600' : '#00e5ff'})` }}/>
@@ -80,13 +84,11 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-beat-bg/90 backdrop-blur-xl border-t border-beat-border"
       style={{ boxShadow: '0 -1px 0 rgba(0,229,255,0.06)' }}>
       <div className="flex items-center justify-around max-w-2xl mx-auto h-16 px-2">
-        {NAV.map(({ to, icon: Icon, label }) => (
-          <NavLink key={to} to={to} end={to === '/'}
+        {NAV.map(({ to, icon: Icon, label, end }) => (
+          <NavLink key={to} to={to} end={end}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${
-                isActive
-                  ? 'text-beat-cyan'
-                  : 'text-beat-muted hover:text-beat-sub'
+              `relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all ${
+                isActive ? 'text-beat-cyan' : 'text-beat-muted hover:text-beat-sub'
               }`
             }>
             {({ isActive }) => (
