@@ -2,13 +2,32 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import { groupsDB, syncQueueDB } from '../services/indexeddb'
 import { initSync, runSync } from '../services/sync'
 
-// ── Group Context ──────────────────────────────────────────
+// ── Theme helper — detect accent color from group name ────────
+function getGroupTheme(group) {
+  if (!group) return 'cyan'
+  const name = (group.group_name || '').toLowerCase()
+  // Yellow keywords
+  const yellowKeys = ['pixie', 'yellow', 'gold', 'sunny', 'warm', 'amber']
+  if (yellowKeys.some(k => name.includes(k))) return 'yellow'
+  return 'cyan'
+}
+
+function applyTheme(theme) {
+  if (theme === 'yellow') {
+    document.documentElement.setAttribute('data-theme', 'yellow')
+  } else {
+    document.documentElement.removeAttribute('data-theme')
+  }
+}
+
+// ── Group Context ──────────────────────────────────────────────
 const GroupCtx = createContext(null)
 
 export function GroupProvider({ children }) {
   const [groups,      setGroups]      = useState([])
   const [activeGroup, setActiveGroupState] = useState(null)
   const [loading,     setLoading]     = useState(true)
+  const [theme,       setTheme]       = useState('cyan')
 
   const loadGroups = useCallback(async () => {
     const gs = await groupsDB.getAll()
@@ -16,6 +35,9 @@ export function GroupProvider({ children }) {
     const lastId = localStorage.getItem('beat_active_group')
     const found  = gs.find(g => g.group_id === lastId) ?? gs[0] ?? null
     setActiveGroupState(found)
+    const t = getGroupTheme(found)
+    setTheme(t)
+    applyTheme(t)
     setLoading(false)
   }, [])
 
@@ -23,6 +45,9 @@ export function GroupProvider({ children }) {
 
   const setActiveGroup = useCallback((g) => {
     setActiveGroupState(g)
+    const t = getGroupTheme(g)
+    setTheme(t)
+    applyTheme(t)
     if (g) localStorage.setItem('beat_active_group', g.group_id)
   }, [])
 
@@ -36,7 +61,7 @@ export function GroupProvider({ children }) {
   }, [activeGroup])
 
   return (
-    <GroupCtx.Provider value={{ groups, activeGroup, setActiveGroup, loading, refreshGroups }}>
+    <GroupCtx.Provider value={{ groups, activeGroup, setActiveGroup, loading, refreshGroups, theme }}>
       {children}
     </GroupCtx.Provider>
   )
@@ -44,7 +69,7 @@ export function GroupProvider({ children }) {
 
 export const useGroup = () => useContext(GroupCtx)
 
-// ── Sync Context ───────────────────────────────────────────
+// ── Sync Context ───────────────────────────────────────────────
 const SyncCtx = createContext(null)
 
 export function SyncProvider({ children }) {
@@ -65,7 +90,6 @@ export function SyncProvider({ children }) {
     }
   }, [])
 
-  // Poll pending count setiap 5 detik
   useEffect(() => {
     const interval = setInterval(async () => {
       const c = await syncQueueDB.countPending()

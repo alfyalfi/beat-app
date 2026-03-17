@@ -9,7 +9,7 @@ import Settings from './pages/Settings'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-beat-bg">
+    <div className="min-h-screen bg-m-bg">
       <Navbar/>
       <main>
         <Routes>

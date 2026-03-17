@@ -1,50 +1,56 @@
 import { X } from 'lucide-react'
 
-export function Btn({ children, variant='primary', size='md', className='', ...props }) {
-  const base = 'inline-flex items-center gap-2 font-body font-medium rounded-lg transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed'
-  const sizes = { sm: 'px-3 py-1.5 text-xs', md: 'px-4 py-2 text-sm', lg: 'px-5 py-2.5 text-sm' }
+// ── Button ────────────────────────────────────────────────────
+export function Btn({ children, variant = 'primary', size = 'md', className = '', ...props }) {
+  const base = 'inline-flex items-center gap-1.5 font-body font-medium rounded-xl transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed select-none'
+  const sizes = {
+    sm: 'px-3 py-1.5 text-xs',
+    md: 'px-4 py-2 text-sm',
+    lg: 'px-5 py-2.5 text-sm',
+  }
   const variants = {
-    primary: 'bg-beat-cyan text-beat-bg font-semibold hover:shadow-glow-cyan active:scale-95',
-    yellow:  'bg-beat-yellow text-beat-bg font-semibold hover:shadow-glow-yellow active:scale-95',
-    ghost:   'card-glass text-beat-text hover:border-beat-cyan/30 active:scale-95',
-    danger:  'bg-beat-coral/10 text-beat-coral border border-beat-coral/30 hover:bg-beat-coral/20',
-    outline: 'border border-beat-border text-beat-sub hover:text-beat-text hover:border-beat-bordhi',
+    primary: 'bg-[var(--accent)] text-white shadow-sm hover:opacity-90 active:scale-95',
+    yellow:  'bg-m-yellow text-white shadow-sm hover:opacity-90 active:scale-95',
+    ghost:   'bg-white/70 border border-m-border text-m-sub hover:bg-white hover:border-m-bordhi active:scale-95',
+    danger:  'bg-red-50 text-m-coral border border-red-200 hover:bg-red-100 active:scale-95',
+    outline: 'border border-m-border text-m-sub bg-white/50 hover:bg-white hover:border-m-bordhi active:scale-95',
   }
   return (
-    <button className={`${base} ${sizes[size]} ${variants[variant]} ${className}`} {...props}>
+    <button className={`${base} ${sizes[size]} ${variants[variant] ?? variants.primary} ${className}`} {...props}>
       {children}
     </button>
   )
 }
 
-export function Badge({ label, color='gray' }) {
+// ── Badge ─────────────────────────────────────────────────────
+export function Badge({ label, color = 'gray' }) {
   const colors = {
-    cyan:   'text-beat-cyan   bg-beat-cyan/10   border-beat-cyan/30',
-    yellow: 'text-beat-yellow bg-beat-yellow/10 border-beat-yellow/30',
-    purple: 'text-beat-purple bg-beat-purple/10 border-beat-purple/30',
-    coral:  'text-beat-coral  bg-beat-coral/10  border-beat-coral/30',
-    green:  'text-beat-green  bg-beat-green/10  border-beat-green/30',
-    teal:   'text-beat-cyan   bg-beat-cyan/10   border-beat-cyan/30',
-    amber:  'text-beat-yellow bg-beat-yellow/10 border-beat-yellow/30',
-    gray:   'text-beat-sub    bg-beat-surface    border-beat-border',
+    cyan:   'text-m-cyandark bg-m-cyanglow border-[rgba(0,180,216,0.25)]',
+    yellow: 'text-m-yelldark bg-m-yellglow border-[rgba(245,166,35,0.25)]',
+    purple: 'text-purple-700  bg-purple-50   border-purple-200',
+    coral:  'text-red-600     bg-red-50      border-red-200',
+    green:  'text-emerald-700 bg-emerald-50  border-emerald-200',
+    gray:   'text-m-sub       bg-slate-100   border-m-border',
+    accent: 'text-[var(--accent-text)] bg-[var(--accent-soft)] border-[var(--accent-glow)]',
   }
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs border font-body ${colors[color] || colors.gray}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-xs border font-body font-medium ${colors[color] ?? colors.gray}`}>
       {label}
     </span>
   )
 }
 
-export function Modal({ open, onClose, title, children, width='max-w-lg' }) {
+// ── Modal ─────────────────────────────────────────────────────
+export function Modal({ open, onClose, title, children, width = 'max-w-lg' }) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-         onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm"/>
-      <div className={`relative w-full ${width} card-glass rounded-t-2xl sm:rounded-2xl animate-slide-up max-h-[90vh] overflow-y-auto border-beat-cyan/20`}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-beat-border sticky top-0 bg-beat-card/90 backdrop-blur z-10">
-          <h2 className="font-display text-xs tracking-widest text-beat-cyan uppercase">{title}</h2>
-          <button onClick={onClose} className="text-beat-muted hover:text-beat-cyan transition-colors p-1 rounded">
+      onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"/>
+      <div className={`relative w-full ${width} bg-white rounded-t-2xl sm:rounded-2xl animate-slide-up max-h-[92vh] overflow-y-auto shadow-card-lift border border-white`}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-m-border sticky top-0 bg-white/95 backdrop-blur-sm z-10">
+          <h2 className="font-display text-xs font-semibold tracking-widest uppercase neon-text">{title}</h2>
+          <button onClick={onClose} className="text-m-muted hover:text-m-text p-1 rounded-lg hover:bg-slate-100 transition-colors">
             <X size={16}/>
           </button>
         </div>
@@ -54,33 +60,36 @@ export function Modal({ open, onClose, title, children, width='max-w-lg' }) {
   )
 }
 
-export function Card({ children, className='', glow=false }) {
+// ── Card ──────────────────────────────────────────────────────
+export function Card({ children, className = '', glow = false }) {
   return (
-    <div className={`card-glass rounded-xl ${glow ? 'neon-border-cyan' : ''} ${className}`}>
+    <div className={`card-glass rounded-2xl ${glow ? 'neon-border' : ''} ${className}`}>
       {children}
     </div>
   )
 }
 
-export function Input({ label, error, className='', ...props }) {
+// ── Input ─────────────────────────────────────────────────────
+export function Input({ label, error, className = '', ...props }) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <label className="text-[10px] font-medium text-beat-sub font-body uppercase tracking-wider">{label}</label>}
+      {label && <label className="text-[10px] font-semibold text-m-sub font-body uppercase tracking-wider">{label}</label>}
       <input
-        className={`w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body placeholder-beat-muted focus:outline-none focus:border-beat-cyan focus:shadow-glow-sm transition-all ${error ? 'border-beat-coral' : ''} ${className}`}
+        className={`w-full bg-white border border-m-border rounded-xl px-3.5 py-2.5 text-sm text-m-text font-body placeholder-m-muted focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)] transition-all ${error ? 'border-m-coral' : ''} ${className}`}
         {...props}
       />
-      {error && <span className="text-xs text-beat-coral">{error}</span>}
+      {error && <span className="text-xs text-m-coral">{error}</span>}
     </div>
   )
 }
 
-export function Select({ label, children, className='', ...props }) {
+// ── Select ────────────────────────────────────────────────────
+export function Select({ label, children, className = '', ...props }) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <label className="text-[10px] font-medium text-beat-sub font-body uppercase tracking-wider">{label}</label>}
+      {label && <label className="text-[10px] font-semibold text-m-sub font-body uppercase tracking-wider">{label}</label>}
       <select
-        className={`w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-all ${className}`}
+        className={`w-full bg-white border border-m-border rounded-xl px-3.5 py-2.5 text-sm text-m-text font-body focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)] transition-all ${className}`}
         {...props}
       >
         {children}
@@ -89,12 +98,13 @@ export function Select({ label, children, className='', ...props }) {
   )
 }
 
-export function Textarea({ label, className='', ...props }) {
+// ── Textarea ──────────────────────────────────────────────────
+export function Textarea({ label, className = '', ...props }) {
   return (
     <div className="flex flex-col gap-1.5">
-      {label && <label className="text-[10px] font-medium text-beat-sub font-body uppercase tracking-wider">{label}</label>}
+      {label && <label className="text-[10px] font-semibold text-m-sub font-body uppercase tracking-wider">{label}</label>}
       <textarea
-        className={`w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body placeholder-beat-muted focus:outline-none focus:border-beat-cyan transition-all resize-none ${className}`}
+        className={`w-full bg-white border border-m-border rounded-xl px-3.5 py-2.5 text-sm text-m-text font-body placeholder-m-muted focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-soft)] transition-all resize-none ${className}`}
         rows={3}
         {...props}
       />
@@ -102,56 +112,46 @@ export function Textarea({ label, className='', ...props }) {
   )
 }
 
-export function Slider({ label, value, onChange, color = '#00e5ff' }) {
+// ── Slider ────────────────────────────────────────────────────
+export function Slider({ label, value, onChange, color = 'var(--accent)' }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
-        <span className="text-xs font-body text-beat-sub uppercase tracking-wider">{label}</span>
-        <span className="text-sm font-display font-bold" style={{ color, textShadow: `0 0 8px ${color}` }}>{value}</span>
+        <span className="text-xs font-body font-medium text-m-sub uppercase tracking-wider">{label}</span>
+        <span className="text-sm font-display font-bold" style={{ color }}>{value}</span>
       </div>
-      <div className="relative">
-        <input
-          type="range" min={0} max={100} value={value}
-          onChange={e => onChange(Number(e.target.value))}
-          className="w-full h-1 rounded-full appearance-none cursor-pointer"
-          style={{ accentColor: color }}
-        />
-        <div className="absolute top-0 left-0 h-1 rounded-full pointer-events-none transition-all"
-          style={{ width: `${value}%`, background: color, boxShadow: `0 0 8px ${color}`, opacity: 0.7 }}/>
-      </div>
+      <input
+        type="range" min={0} max={100} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="w-full"
+        style={{ accentColor: color }}
+      />
     </div>
   )
 }
 
+// ── Empty State ───────────────────────────────────────────────
 export function EmptyState({ icon, title, subtitle }) {
   return (
     <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
-      <div className="text-4xl opacity-20">{icon}</div>
-      <p className="text-beat-text font-body font-medium">{title}</p>
-      {subtitle && <p className="text-beat-sub font-body text-sm max-w-xs">{subtitle}</p>}
+      <div className="text-4xl opacity-40">{icon}</div>
+      <p className="text-m-text font-body font-semibold text-sm">{title}</p>
+      {subtitle && <p className="text-m-muted font-body text-xs max-w-xs leading-relaxed">{subtitle}</p>}
     </div>
   )
 }
 
-export function Spinner() {
+// ── Skeleton ──────────────────────────────────────────────────
+export function SkeletonCard() {
   return (
-    <div className="flex items-center justify-center py-12">
-      <div className="w-8 h-8 border-2 border-beat-border border-t-beat-cyan rounded-full animate-spin"
-           style={{ boxShadow: '0 0 12px rgba(0,229,255,0.4)' }}/>
-    </div>
-  )
-}
-
-export function SkeletonCard({ lines = 2 }) {
-  return (
-    <div className="card-glass rounded-xl p-4 animate-pulse">
+    <div className="card-glass rounded-2xl p-4">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-beat-border flex-shrink-0"/>
+        <div className="skeleton w-9 h-9 rounded-full flex-shrink-0"/>
         <div className="flex-1 space-y-2">
-          <div className="h-3 bg-beat-border rounded w-2/3"/>
-          {lines > 1 && <div className="h-2 bg-beat-border rounded w-1/3"/>}
+          <div className="skeleton h-3 w-2/3"/>
+          <div className="skeleton h-2.5 w-1/3"/>
         </div>
-        <div className="w-12 h-5 bg-beat-border rounded-full"/>
+        <div className="skeleton w-12 h-5 rounded-lg"/>
       </div>
     </div>
   )
@@ -165,10 +165,18 @@ export function SkeletonList({ count = 3 }) {
   )
 }
 
-export function SectionTitle({ children }) {
+// ── Spinner ───────────────────────────────────────────────────
+export function Spinner() {
   return (
-    <h2 className="font-display text-[10px] text-beat-cyan uppercase tracking-[0.2em] mb-3 neon-text-cyan opacity-80">
-      {children}
-    </h2>
+    <div className="flex items-center justify-center py-12">
+      <div className="w-7 h-7 border-2 border-m-border border-t-[var(--accent)] rounded-full animate-spin"/>
+    </div>
+  )
+}
+
+// ── Section Title ─────────────────────────────────────────────
+export function SectionTitle({ children, className = '' }) {
+  return (
+    <h2 className={`section-title ${className}`}>{children}</h2>
   )
 }

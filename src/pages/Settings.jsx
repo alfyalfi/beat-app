@@ -118,7 +118,7 @@ export default function Settings() {
       {/* Toast */}
       {toast && (
         <div className={`fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl text-sm font-body shadow-lg animate-slide-up
-          ${toast.type === 'error' ? 'bg-beat-coral text-white' : 'bg-beat-cyan text-beat-bg'}`}>
+          ${toast.type === 'error' ? 'bg-m-coral text-white' : 'bg-[var(--accent)] text-white'}`}>
           {toast.msg}
         </div>
       )}
@@ -140,18 +140,18 @@ export default function Settings() {
                 <div className="flex items-center gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-body font-medium text-beat-text truncate">{g.group_name}</p>
+                      <p className="text-sm font-body font-medium text-m-text truncate">{g.group_name}</p>
                       {activeGroup?.group_id === g.group_id && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-beat-cyan/10 text-beat-cyan border border-beat-cyan/20 font-body">aktif</span>
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent-glow)] font-body">aktif</span>
                       )}
                     </div>
-                    {g.description && <p className="text-xs font-body text-beat-muted truncate">{g.description}</p>}
+                    {g.description && <p className="text-xs font-body text-m-muted truncate">{g.description}</p>}
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => setGroupModal(g)} className="p-2 text-beat-muted hover:text-beat-text rounded-lg hover:bg-beat-surface transition-colors">
+                    <button onClick={() => setGroupModal(g)} className="p-2 text-m-muted hover:text-m-text rounded-lg hover:bg-white/60 transition-colors">
                       <Pencil size={14}/>
                     </button>
-                    <button onClick={() => setDelGroup(g)} className="p-2 text-beat-muted hover:text-beat-coral rounded-lg hover:bg-beat-coral/10 transition-colors">
+                    <button onClick={() => setDelGroup(g)} className="p-2 text-m-muted hover:text-m-coral rounded-lg hover:bg-red-50 transition-colors">
                       <Trash2 size={14}/>
                     </button>
                   </div>
@@ -169,9 +169,9 @@ export default function Settings() {
             {/* Import Excel */}
             <button onClick={() => xlsxRef.current?.click()}
               disabled={importing}
-              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <Upload size={20} className="text-beat-cyan"/>
-              <span className="text-xs font-body text-beat-sub text-center">
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-2xl hover:border-m-bordhi transition-all active:scale-95">
+              <Upload size={20} className="text-[var(--accent)]"/>
+              <span className="text-xs font-body text-m-sub text-center">
                 {importing ? 'Mengimport...' : 'Import Anggota\nfrom Excel'}
               </span>
             </button>
@@ -179,30 +179,30 @@ export default function Settings() {
 
             {/* Export Excel */}
             <button onClick={() => exportGroupToExcel(activeGroup.group_id, activeGroup.group_name)}
-              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <FileSpreadsheet size={20} className="text-beat-yellow"/>
-              <span className="text-xs font-body text-beat-sub text-center">Export Data\nke Excel</span>
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-2xl hover:border-m-bordhi transition-all active:scale-95">
+              <FileSpreadsheet size={20} className="text-m-yellow"/>
+              <span className="text-xs font-body text-m-sub text-center">Export Data\nke Excel</span>
             </button>
 
             {/* Backup JSON */}
             <button onClick={handleBackup}
-              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <Download size={20} className="text-beat-purple"/>
-              <span className="text-xs font-body text-beat-sub text-center">Backup JSON</span>
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-2xl hover:border-m-bordhi transition-all active:scale-95">
+              <Download size={20} className="text-m-purple"/>
+              <span className="text-xs font-body text-m-sub text-center">Backup JSON</span>
             </button>
 
             {/* Restore */}
             <button onClick={() => fileRef.current?.click()}
-              className="flex flex-col items-center gap-2 p-4 card-glass rounded-xl hover:border-beat-muted transition-all active:scale-95">
-              <Database size={20} className="text-beat-coral"/>
-              <span className="text-xs font-body text-beat-sub text-center">Restore\nBackup</span>
+              className="flex flex-col items-center gap-2 p-4 card-glass rounded-2xl hover:border-m-bordhi transition-all active:scale-95">
+              <Database size={20} className="text-m-coral"/>
+              <span className="text-xs font-body text-m-sub text-center">Restore\nBackup</span>
             </button>
             <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleRestore}/>
           </div>
 
           {/* Excel template hint */}
-          <p className="text-xs font-body text-beat-muted mt-3 text-center">
-            Template Excel: kolom <code className="text-beat-cyan">name</code>, <code className="text-beat-cyan">instrument</code>, <code className="text-beat-cyan">jabatan</code>, <code className="text-beat-cyan">angkatan</code>
+          <p className="text-xs font-body text-m-muted mt-3 text-center">
+            Template Excel: kolom <code className="text-[var(--accent)]">name</code>, <code className="text-[var(--accent)]">instrument</code>, <code className="text-[var(--accent)]">jabatan</code>, <code className="text-[var(--accent)]">angkatan</code>
           </p>
         </div>
       )}
@@ -219,10 +219,10 @@ export default function Settings() {
       </Modal>
 
       <Modal open={!!delGroup} onClose={() => setDelGroup(null)} title="Hapus Grup">
-        <p className="font-body text-sm text-beat-sub mb-1">
-          Hapus grup <span className="text-beat-text font-medium">{delGroup?.group_name}</span>?
+        <p className="font-body text-sm text-m-sub mb-1">
+          Hapus grup <span className="text-m-text font-medium">{delGroup?.group_name}</span>?
         </p>
-        <p className="font-body text-xs text-beat-coral mb-4">
+        <p className="font-body text-xs text-m-coral mb-4">
           Data anggota, sesi, dan absensi dalam grup ini tidak ikut terhapus dari IndexedDB, namun grup tidak lagi tampil.
         </p>
         <div className="flex gap-2 justify-end">

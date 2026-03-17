@@ -13,14 +13,14 @@ import { exportToPNG } from '../services/exportImage'
 // Skeleton loader
 function SkeletonCard() {
   return (
-    <div className="card-glass rounded-xl p-4 animate-pulse">
+    <div className="card-glass rounded-2xl p-4 animate-pulse">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-beat-border"/>
+        <div className="w-9 h-9 rounded-full bg-slate-200"/>
         <div className="flex-1 space-y-2">
-          <div className="h-3 bg-beat-border rounded w-1/2"/>
-          <div className="h-2 bg-beat-border rounded w-1/3"/>
+          <div className="h-3 bg-slate-200 rounded w-1/2"/>
+          <div className="h-2 bg-slate-200 rounded w-1/3"/>
         </div>
-        <div className="w-10 h-4 bg-beat-border rounded"/>
+        <div className="w-10 h-4 bg-slate-200 rounded"/>
       </div>
     </div>
   )
@@ -109,22 +109,22 @@ function ExportModal({ open, onClose, activeTab, groupName, exportRefs }) {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
          onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm"/>
-      <div className="relative w-full max-w-lg card-glass rounded-t-2xl sm:rounded-2xl animate-slide-up border border-beat-cyan/20">
+      <div className="relative w-full max-w-lg card-glass rounded-t-2xl sm:rounded-2xl animate-slide-up border border-[var(--accent)]/20">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-beat-border">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-m-border">
           <div className="flex items-center gap-2">
-            <Camera size={15} className="text-beat-cyan" style={{ filter: 'drop-shadow(0 0 6px #00e5ff)' }}/>
-            <h2 className="font-display text-xs tracking-widest text-beat-cyan uppercase">Export PNG</h2>
+            <Camera size={15} className="text-[var(--accent)]" style={{ filter: 'drop-shadow(0 0 6px #00e5ff)' }}/>
+            <h2 className="font-display text-xs tracking-widest text-[var(--accent)] uppercase">Export PNG</h2>
           </div>
-          <button onClick={onClose} className="text-beat-muted hover:text-beat-cyan p-1 rounded transition-colors">
+          <button onClick={onClose} className="text-m-muted hover:text-[var(--accent)] p-1 rounded transition-colors">
             <X size={16}/>
           </button>
         </div>
 
         {/* Body */}
         <div className="p-5 space-y-4">
-          <p className="text-xs font-body text-beat-sub">
+          <p className="text-xs font-body text-m-sub">
             Pilih konten yang ingin diekspor sebagai gambar PNG bersih:
           </p>
 
@@ -134,27 +134,27 @@ function ExportModal({ open, onClose, activeTab, groupName, exportRefs }) {
               <button key={opt.key} onClick={() => toggle(opt.key)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
                   selected[opt.key]
-                    ? 'border-beat-cyan/40 bg-beat-cyan/5'
-                    : 'border-beat-border bg-beat-surface/30 hover:border-beat-bordhi'
+                    ? 'border-[var(--accent)]/40 bg-[var(--accent-soft)]'
+                    : 'border-m-border bg-white/60/30 hover:border-beat-bordhi'
                 }`}>
                 {/* Checkbox */}
                 <div className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 transition-all border ${
                   selected[opt.key]
-                    ? 'bg-beat-cyan border-beat-cyan'
-                    : 'border-beat-border bg-beat-surface'
+                    ? 'bg-beat-cyan border-[var(--accent)]'
+                    : 'border-m-border bg-white/60'
                 }`}>
                   {selected[opt.key] && <Check size={12} className="text-beat-bg" strokeWidth={3}/>}
                 </div>
                 <span className="text-base">{opt.icon}</span>
-                <span className="text-sm font-body text-beat-text">{opt.label}</span>
+                <span className="text-sm font-body text-m-text">{opt.label}</span>
               </button>
             ))}
           </div>
 
           {/* Info box */}
-          <div className="px-3 py-2.5 rounded-xl bg-beat-surface border border-beat-border">
-            <p className="text-[11px] font-body text-beat-muted leading-relaxed">
-              Setiap konten yang dipilih akan diunduh sebagai file <span className="text-beat-cyan">.png</span> terpisah.
+          <div className="px-3 py-2.5 rounded-xl bg-white/60 border border-m-border">
+            <p className="text-[11px] font-body text-m-muted leading-relaxed">
+              Setiap konten yang dipilih akan diunduh sebagai file <span className="text-[var(--accent)]">.png</span> terpisah.
               Gambar dirender tanpa navbar & bottomnav.
             </p>
           </div>
@@ -168,7 +168,7 @@ function ExportModal({ open, onClose, activeTab, groupName, exportRefs }) {
                 ? 'bg-beat-green text-beat-bg'
                 : anySelected && !exporting
                   ? 'bg-beat-cyan text-beat-bg hover:shadow-glow-cyan active:scale-95'
-                  : 'bg-beat-surface text-beat-muted cursor-not-allowed'
+                  : 'bg-white/60 text-m-muted cursor-not-allowed'
             }`}>
             {done ? (
               <><Check size={16}/>Tersimpan!</>
@@ -314,30 +314,30 @@ function AttendanceCharts({ group_id, members, sessions, exportRefs }) {
     <div className="space-y-5 animate-fade-in">
 
       {/* Filter bar — hidden in export */}
-      <div className="card-glass rounded-xl p-3 space-y-2" data-export-hide>
+      <div className="card-glass rounded-2xl p-3 space-y-2" data-export-hide>
         <div className="flex items-center gap-2 mb-1">
-          <Filter size={12} className="text-beat-cyan"/>
-          <span className="text-[10px] font-body text-beat-cyan uppercase tracking-wider">Filter</span>
+          <Filter size={12} className="text-[var(--accent)]"/>
+          <span className="text-[10px] font-body text-[var(--accent)] uppercase tracking-wider">Filter</span>
         </div>
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <p className="text-[9px] font-body text-beat-muted mb-1 uppercase">Instrumen</p>
+            <p className="text-[9px] font-body text-m-muted mb-1 uppercase">Instrumen</p>
             <select value={filterInstrument} onChange={e => setFilterInstrument(e.target.value)}
-              className="w-full bg-beat-surface border border-beat-border rounded-lg px-2 py-1.5 text-xs text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+              className="w-full bg-white/60 border border-m-border rounded-lg px-2 py-1.5 text-xs text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
               {instrumentOpts.map(o => <option key={o} value={o}>{o === 'all' ? 'Semua' : o}</option>)}
             </select>
           </div>
           <div>
-            <p className="text-[9px] font-body text-beat-muted mb-1 uppercase">Jabatan</p>
+            <p className="text-[9px] font-body text-m-muted mb-1 uppercase">Jabatan</p>
             <select value={filterJabatan} onChange={e => setFilterJabatan(e.target.value)}
-              className="w-full bg-beat-surface border border-beat-border rounded-lg px-2 py-1.5 text-xs text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+              className="w-full bg-white/60 border border-m-border rounded-lg px-2 py-1.5 text-xs text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
               {jabatanOpts.map(o => <option key={o} value={o}>{o === 'all' ? 'Semua' : o}</option>)}
             </select>
           </div>
           <div>
-            <p className="text-[9px] font-body text-beat-muted mb-1 uppercase">Periode</p>
+            <p className="text-[9px] font-body text-m-muted mb-1 uppercase">Periode</p>
             <select value={filterPeriod} onChange={e => setFilterPeriod(e.target.value)}
-              className="w-full bg-beat-surface border border-beat-border rounded-lg px-2 py-1.5 text-xs text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+              className="w-full bg-white/60 border border-m-border rounded-lg px-2 py-1.5 text-xs text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
               <option value="all">Semua</option>
               <option value="last5">5 Sesi Terakhir</option>
               <option value="last10">10 Sesi Terakhir</option>
@@ -345,7 +345,7 @@ function AttendanceCharts({ group_id, members, sessions, exportRefs }) {
           </div>
         </div>
         {(filterInstrument !== 'all' || filterJabatan !== 'all') && (
-          <p className="text-[10px] font-body text-beat-cyan mt-1">
+          <p className="text-[10px] font-body text-[var(--accent)] mt-1">
             Menampilkan {filteredMembers.length} anggota
             {filterInstrument !== 'all' && ` · ${filterInstrument}`}
             {filterJabatan !== 'all' && ` · ${filterJabatan}`}
@@ -389,7 +389,7 @@ function AttendanceCharts({ group_id, members, sessions, exportRefs }) {
                 {Object.entries(rankLabels).map(([k, label]) => (
                   <button key={k} onClick={() => setRankMetric(k)}
                     className={`px-2 py-0.5 rounded-full text-[10px] font-body border transition-all ${
-                      rankMetric === k ? 'border-transparent text-beat-bg font-semibold' : 'border-beat-border text-beat-muted hover:border-beat-bordhi'
+                      rankMetric === k ? 'border-transparent text-beat-bg font-semibold' : 'border-m-border text-m-muted hover:border-beat-bordhi'
                     }`}
                     style={rankMetric === k ? { background: rankColors[k] } : {}}>
                     {k.charAt(0).toUpperCase() + k.slice(1)}
@@ -442,9 +442,9 @@ function StatModal({ member, sessions, group_id, onClose }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-beat-sub font-body">Sesi</label>
+        <label className="text-xs font-medium text-m-sub font-body">Sesi</label>
         <select value={sessionId} onChange={e => setSessionId(e.target.value)}
-          className="w-full bg-beat-surface border border-beat-border rounded-lg px-3 py-2.5 text-sm text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+          className="w-full bg-white/60 border border-m-border rounded-lg px-3 py-2.5 text-sm text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
           {sessions.map(s => <option key={s.session_id} value={s.session_id}>{s.title} — {formatDate(s.session_date)}</option>)}
         </select>
       </div>
@@ -473,27 +473,27 @@ function MemberStatCard({ member, group_id, exportRef }) {
 
   return (
     <Card className="overflow-hidden">
-      <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-beat-surface/50 transition-colors" onClick={() => setExpanded(e => !e)}>
-        <div className="w-9 h-9 rounded-full bg-beat-surface border border-beat-border flex items-center justify-center text-sm font-display text-beat-cyan flex-shrink-0">
+      <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/60/50 transition-colors" onClick={() => setExpanded(e => !e)}>
+        <div className="w-9 h-9 rounded-full bg-white/60 border border-m-border flex items-center justify-center text-sm font-display text-[var(--accent)] flex-shrink-0">
           {member.name[0]}
         </div>
         <div className="flex-1 text-left min-w-0">
-          <p className="text-sm font-body font-medium text-beat-text truncate">{member.name}</p>
-          <p className="text-xs font-body text-beat-muted">{member.instrument}{member.jabatan && member.jabatan !== 'Anggota' && ` · ${member.jabatan}`}</p>
+          <p className="text-sm font-body font-medium text-m-text truncate">{member.name}</p>
+          <p className="text-xs font-body text-m-muted">{member.instrument}{member.jabatan && member.jabatan !== 'Anggota' && ` · ${member.jabatan}`}</p>
         </div>
         <div className="flex items-center gap-3">
           {avg !== null && (
             <div className="text-right">
-              <div className="text-base font-display text-beat-cyan">{avg}</div>
-              <div className="text-[10px] font-body text-beat-muted">avg</div>
+              <div className="text-base font-display text-[var(--accent)]">{avg}</div>
+              <div className="text-[10px] font-body text-m-muted">avg</div>
             </div>
           )}
-          <ChevronDown size={16} className={`text-beat-muted transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}/>
+          <ChevronDown size={16} className={`text-m-muted transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}/>
         </div>
       </button>
 
       {expanded && (
-        <div className="border-t border-beat-border px-4 pb-4 pt-3 space-y-3 animate-fade-in">
+        <div className="border-t border-m-border px-4 pb-4 pt-3 space-y-3 animate-fade-in">
           {loading ? <Spinner/> : (
             <>
               {/* Wrap radar+scores in exportable section */}
@@ -506,14 +506,14 @@ function MemberStatCard({ member, group_id, exportRef }) {
               </ExportSection>
               {history.length > 0 && (
                 <div className="mt-3">
-                  <p className="text-xs font-body text-beat-muted mb-2 uppercase tracking-wider">Riwayat</p>
+                  <p className="text-xs font-body text-m-muted mb-2 uppercase tracking-wider">Riwayat</p>
                   <div className="space-y-1.5">
                     {[...history].reverse().slice(0, 5).map(h => (
-                      <div key={h.stat_id} className="flex items-center justify-between py-1.5 border-b border-beat-border last:border-0">
-                        <span className="text-xs font-body text-beat-muted">{formatDate(h.session_date)}</span>
+                      <div key={h.stat_id} className="flex items-center justify-between py-1.5 border-b border-m-border last:border-0">
+                        <span className="text-xs font-body text-m-muted">{formatDate(h.session_date)}</span>
                         <div className="flex gap-1">
                           {SKILL_VARS.map(v => (
-                            <span key={v.key} className="text-[10px] font-body px-1.5 py-0.5 rounded bg-beat-surface" style={{ color: v.color }}>
+                            <span key={v.key} className="text-[10px] font-body px-1.5 py-0.5 rounded bg-white/60" style={{ color: v.color }}>
                               {h.scores[v.key]}
                             </span>
                           ))}
@@ -571,17 +571,17 @@ function StatsRanking({ members, group_id, exportRefs }) {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      <div className="card-glass rounded-xl p-3 space-y-2" data-export-hide>
+      <div className="card-glass rounded-2xl p-3 space-y-2" data-export-hide>
         <div className="flex items-center gap-2 mb-1">
-          <Filter size={12} className="text-beat-cyan"/>
-          <span className="text-[10px] font-body text-beat-cyan uppercase tracking-wider">Filter Ranking</span>
+          <Filter size={12} className="text-[var(--accent)]"/>
+          <span className="text-[10px] font-body text-[var(--accent)] uppercase tracking-wider">Filter Ranking</span>
         </div>
         <div>
-          <p className="text-[9px] font-body text-beat-muted mb-1.5 uppercase">Skill</p>
+          <p className="text-[9px] font-body text-m-muted mb-1.5 uppercase">Skill</p>
           <div className="flex gap-1.5 flex-wrap">
             {SKILL_VARS.map(v => (
               <button key={v.key} onClick={() => setFilterSkill(v.key)}
-                className={`px-2.5 py-1 rounded-full text-[10px] font-body border transition-all ${filterSkill === v.key ? 'border-transparent text-beat-bg font-semibold' : 'border-beat-border text-beat-muted'}`}
+                className={`px-2.5 py-1 rounded-full text-[10px] font-body border transition-all ${filterSkill === v.key ? 'border-transparent text-beat-bg font-semibold' : 'border-m-border text-m-muted'}`}
                 style={filterSkill === v.key ? { background: v.color } : {}}>
                 {v.label}
               </button>
@@ -590,16 +590,16 @@ function StatsRanking({ members, group_id, exportRefs }) {
         </div>
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <p className="text-[9px] font-body text-beat-muted mb-1 uppercase">Instrumen</p>
+            <p className="text-[9px] font-body text-m-muted mb-1 uppercase">Instrumen</p>
             <select value={filterInstrument} onChange={e => setFilterInstrument(e.target.value)}
-              className="w-full bg-beat-surface border border-beat-border rounded-lg px-2 py-1.5 text-xs text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+              className="w-full bg-white/60 border border-m-border rounded-lg px-2 py-1.5 text-xs text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
               {instrumentOpts.map(o => <option key={o} value={o}>{o === 'all' ? 'Semua' : o}</option>)}
             </select>
           </div>
           <div>
-            <p className="text-[9px] font-body text-beat-muted mb-1 uppercase">Jabatan</p>
+            <p className="text-[9px] font-body text-m-muted mb-1 uppercase">Jabatan</p>
             <select value={filterJabatan} onChange={e => setFilterJabatan(e.target.value)}
-              className="w-full bg-beat-surface border border-beat-border rounded-lg px-2 py-1.5 text-xs text-beat-text font-body focus:outline-none focus:border-beat-cyan transition-colors">
+              className="w-full bg-white/60 border border-m-border rounded-lg px-2 py-1.5 text-xs text-m-text font-body focus:outline-none focus:border-[var(--accent)] transition-colors">
               {jabatanOpts.map(o => <option key={o} value={o}>{o === 'all' ? 'Semua' : o}</option>)}
             </select>
           </div>
@@ -689,7 +689,7 @@ export default function Stats() {
         <div className="flex items-center gap-2">
           {/* Export PNG button */}
           <button onClick={() => setExportModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body card-glass border border-beat-cyan/20 text-beat-cyan hover:border-beat-cyan/40 hover:bg-beat-cyan/5 transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body card-glass border border-[var(--accent)]/20 text-[var(--accent)] hover:border-[var(--accent)]/40 hover:bg-[var(--accent-soft)] transition-all"
             style={{ filter: 'drop-shadow(0 0 4px rgba(0,229,255,0.2))' }}>
             <Camera size={13}/>
             Export PNG
@@ -703,11 +703,11 @@ export default function Stats() {
       </div>
 
       {/* Tab switcher */}
-      <div className="flex gap-1 mb-5 p-1 bg-beat-surface rounded-xl border border-beat-border">
+      <div className="flex gap-1 mb-5 p-1 bg-white/60 rounded-xl border border-m-border">
         {TABS.map(({ key, label, icon: Icon }) => (
           <button key={key} onClick={() => setTab(key)}
             className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-body transition-all duration-200 ${
-              tab === key ? 'bg-beat-cyan text-beat-bg font-semibold' : 'text-beat-muted hover:text-beat-text'
+              tab === key ? 'bg-beat-cyan text-beat-bg font-semibold' : 'text-m-muted hover:text-m-text'
             }`}>
             <Icon size={13}/>{label}
           </button>
@@ -760,16 +760,16 @@ export default function Stats() {
       <Modal open={!!evalModal} onClose={() => setEvalModal(null)} title="Input Penilaian">
         {evalModal === true ? (
           <div className="space-y-2">
-            <p className="text-xs font-body text-beat-muted mb-3">Pilih anggota:</p>
+            <p className="text-xs font-body text-m-muted mb-3">Pilih anggota:</p>
             {activeMembers.map(m => (
               <button key={m.member_id} onClick={() => setEvalModal(m)}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-beat-surface rounded-xl hover:bg-beat-border transition-colors text-left">
-                <div className="w-8 h-8 rounded-full bg-beat-card border border-beat-border flex items-center justify-center text-sm font-display text-beat-cyan">
+                className="w-full flex items-center gap-3 px-4 py-3 bg-white/60 rounded-xl hover:bg-slate-200 transition-colors text-left">
+                <div className="w-8 h-8 rounded-full bg-white border border-m-border flex items-center justify-center text-sm font-display text-[var(--accent)]">
                   {m.name[0]}
                 </div>
                 <div>
-                  <p className="text-sm font-body text-beat-text">{m.name}</p>
-                  <p className="text-xs font-body text-beat-muted">{m.instrument}</p>
+                  <p className="text-sm font-body text-m-text">{m.name}</p>
+                  <p className="text-xs font-body text-m-muted">{m.instrument}</p>
                 </div>
               </button>
             ))}

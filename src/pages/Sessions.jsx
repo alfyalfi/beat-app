@@ -124,12 +124,12 @@ export default function Sessions() {
               <div key={s.session_id} className="relative flex items-center gap-2">
                 {/* Main card — navigasi ke absensi */}
                 <Link to={`/sessions/${s.session_id}`}
-                  className="flex-1 flex items-center justify-between card-glass rounded-xl px-4 py-3.5 hover:border-beat-cyan/25 transition-all min-w-0">
+                  className="flex-1 flex items-center justify-between card-glass rounded-2xl px-4 py-3.5 hover:border-[var(--accent)]/25 transition-all min-w-0">
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-body font-medium text-beat-text truncate">{s.title}</p>
-                    <p className="text-xs font-body text-beat-muted">{formatDate(s.session_date)}</p>
+                    <p className="text-sm font-body font-medium text-m-text truncate">{s.title}</p>
+                    <p className="text-xs font-body text-m-muted">{formatDate(s.session_date)}</p>
                     {s.notes && (
-                      <p className="text-xs font-body text-beat-muted mt-0.5 truncate">{s.notes}</p>
+                      <p className="text-xs font-body text-m-muted mt-0.5 truncate">{s.notes}</p>
                     )}
                   </div>
                   <Badge
@@ -141,27 +141,27 @@ export default function Sessions() {
                 <div className="relative" onClick={e => e.stopPropagation()}>
                   <button
                     onClick={() => setMenuOpen(menuOpen === s.session_id ? null : s.session_id)}
-                    className="p-2.5 text-beat-muted hover:text-beat-text card-glass rounded-xl border border-beat-border transition-all">
+                    className="p-2.5 text-m-muted hover:text-m-text card-glass rounded-2xl border border-m-border transition-all">
                     <MoreVertical size={15}/>
                   </button>
 
                   {/* Dropdown menu */}
                   {menuOpen === s.session_id && (
-                    <div className="absolute right-0 top-11 w-44 card-glass rounded-xl border border-beat-cyan/15 z-20 overflow-hidden animate-fade-in shadow-2xl">
+                    <div className="absolute right-0 top-11 w-44 card-glass rounded-2xl border border-[var(--accent)]/15 z-20 overflow-hidden animate-fade-in shadow-2xl">
                       <button
                         onClick={() => { setEditModal(s); setMenuOpen(null) }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-beat-text hover:bg-beat-cyan/5 transition-colors border-b border-beat-border">
-                        <Pencil size={13} className="text-beat-cyan"/>Edit sesi
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-m-text hover:bg-[var(--accent-soft)] transition-colors border-b border-m-border">
+                        <Pencil size={13} className="text-[var(--accent)]"/>Edit sesi
                       </button>
                       <Link
                         to={`/sessions/${s.session_id}`}
                         onClick={() => setMenuOpen(null)}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-beat-text hover:bg-beat-yellow/5 transition-colors border-b border-beat-border">
-                        <Pencil size={13} className="text-beat-yellow"/>Edit absensi
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-m-text hover:bg-amber-50 transition-colors border-b border-m-border">
+                        <Pencil size={13} className="text-m-yellow"/>Edit absensi
                       </Link>
                       <button
                         onClick={() => { setDeleteModal(s); setMenuOpen(null) }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-beat-coral hover:bg-beat-coral/5 transition-colors">
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-body text-m-coral hover:bg-red-50 transition-colors">
                         <Trash2 size={13}/>Hapus sesi
                       </button>
                     </div>
@@ -194,11 +194,11 @@ export default function Sessions() {
       {/* ── Modal: Hapus sesi ── */}
       <Modal open={!!deleteModal} onClose={() => setDeleteModal(null)} title="Hapus Sesi">
         <div className="space-y-4">
-          <div className="px-4 py-3 rounded-xl bg-beat-coral/10 border border-beat-coral/20">
-            <p className="text-sm font-body font-medium text-beat-text">{deleteModal?.title}</p>
-            <p className="text-xs font-body text-beat-muted mt-0.5">{formatDate(deleteModal?.session_date)}</p>
+          <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+            <p className="text-sm font-body font-medium text-m-text">{deleteModal?.title}</p>
+            <p className="text-xs font-body text-m-muted mt-0.5">{formatDate(deleteModal?.session_date)}</p>
           </div>
-          <p className="text-sm font-body text-beat-sub">
+          <p className="text-sm font-body text-m-sub">
             Hapus sesi ini? Data absensi yang sudah dicatat dalam sesi ini juga akan ikut terhapus.
           </p>
           <div className="flex gap-2 justify-end">
@@ -211,37 +211,37 @@ export default function Sessions() {
       {/* ── Modal: Overwrite tanggal sama ── */}
       <Modal open={!!overwriteModal} onClose={() => setOverwriteModal(null)} title="Sesi Tanggal Ini Sudah Ada">
         <div className="space-y-4">
-          <div className="px-4 py-3 rounded-xl bg-beat-yellow/10 border border-beat-yellow/20">
-            <p className="text-[10px] font-body text-beat-yellow uppercase tracking-wider mb-1">Sesi yang sudah ada</p>
-            <p className="text-sm font-body font-medium text-beat-text">{overwriteModal?.existing?.title}</p>
-            <p className="text-xs font-body text-beat-muted">{formatDate(overwriteModal?.existing?.session_date)}</p>
+          <div className="px-4 py-3 rounded-xl bg-amber-50 border border-m-yellow/20">
+            <p className="text-[10px] font-body text-m-yellow uppercase tracking-wider mb-1">Sesi yang sudah ada</p>
+            <p className="text-sm font-body font-medium text-m-text">{overwriteModal?.existing?.title}</p>
+            <p className="text-xs font-body text-m-muted">{formatDate(overwriteModal?.existing?.session_date)}</p>
           </div>
-          <p className="text-sm font-body text-beat-sub">
+          <p className="text-sm font-body text-m-sub">
             Sudah ada sesi di tanggal ini. Mau apa?
           </p>
           <div className="space-y-2">
             <button onClick={handleOverwrite}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl card-glass border border-beat-yellow/30 hover:border-beat-yellow/60 transition-all text-left">
-              <div className="w-8 h-8 rounded-lg bg-beat-yellow/10 flex items-center justify-center flex-shrink-0">
-                <Pencil size={14} className="text-beat-yellow"/>
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl card-glass border border-m-yellow/30 hover:border-amber-400 transition-all text-left">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <Pencil size={14} className="text-m-yellow"/>
               </div>
               <div>
-                <p className="text-sm font-body font-medium text-beat-text">Timpa sesi yang ada</p>
-                <p className="text-xs font-body text-beat-muted">Update nama & catatan, absensi tetap</p>
+                <p className="text-sm font-body font-medium text-m-text">Timpa sesi yang ada</p>
+                <p className="text-xs font-body text-m-muted">Update nama & catatan, absensi tetap</p>
               </div>
             </button>
             <button onClick={handleCreateAnyway}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl card-glass border border-beat-cyan/30 hover:border-beat-cyan/60 transition-all text-left">
-              <div className="w-8 h-8 rounded-lg bg-beat-cyan/10 flex items-center justify-center flex-shrink-0">
-                <Plus size={14} className="text-beat-cyan"/>
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl card-glass border border-[var(--accent)]/30 hover:border-[var(--accent)]/60 transition-all text-left">
+              <div className="w-8 h-8 rounded-lg bg-[var(--accent-soft)] flex items-center justify-center flex-shrink-0">
+                <Plus size={14} className="text-[var(--accent)]"/>
               </div>
               <div>
-                <p className="text-sm font-body font-medium text-beat-text">Buat sesi baru tetap</p>
-                <p className="text-xs font-body text-beat-muted">Dua sesi di tanggal yang sama</p>
+                <p className="text-sm font-body font-medium text-m-text">Buat sesi baru tetap</p>
+                <p className="text-xs font-body text-m-muted">Dua sesi di tanggal yang sama</p>
               </div>
             </button>
             <button onClick={() => setOverwriteModal(null)}
-              className="w-full py-2.5 text-xs font-body text-beat-muted hover:text-beat-text border border-beat-border rounded-xl transition-all">
+              className="w-full py-2.5 text-xs font-body text-m-muted hover:text-m-text border border-m-border rounded-xl transition-all">
               Batal
             </button>
           </div>
@@ -322,9 +322,9 @@ export function AttendancePage() {
   if (!activeGroup) return <EmptyState icon="🎵" title="Pilih grup dulu"/>
   if (!session && !loading) return (
     <div className="px-4 pt-8 text-center">
-      <p className="text-beat-muted font-body text-sm">Sesi tidak ditemukan.</p>
+      <p className="text-m-muted font-body text-sm">Sesi tidak ditemukan.</p>
       <button onClick={() => navigate('/sessions')}
-        className="mt-3 text-beat-cyan text-sm font-body">
+        className="mt-3 text-[var(--accent)] text-sm font-body">
         ← Kembali ke daftar sesi
       </button>
     </div>
@@ -337,18 +337,18 @@ export function AttendancePage() {
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <button onClick={() => navigate('/sessions')}
-          className="text-beat-muted hover:text-beat-cyan transition-colors">
+          className="text-m-muted hover:text-[var(--accent)] transition-colors">
           <ChevronLeft size={20}/>
         </button>
         <div className="flex-1 min-w-0">
-          <h1 className="font-display text-xs tracking-widest text-beat-cyan truncate uppercase">
+          <h1 className="font-display text-xs tracking-widest text-[var(--accent)] truncate uppercase">
             {session.title}
           </h1>
-          <p className="font-body text-xs text-beat-muted">{formatDate(session.session_date)}</p>
+          <p className="font-body text-xs text-m-muted">{formatDate(session.session_date)}</p>
         </div>
         {isClosed ? (
           <button onClick={() => setReopenModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body border border-beat-yellow/30 text-beat-yellow bg-beat-yellow/5 hover:bg-beat-yellow/10 transition-all">
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-body border border-m-yellow/30 text-m-yellow bg-amber-50 hover:bg-amber-50 transition-all">
             <LockOpen size={12}/>Buka Lagi
           </button>
         ) : (
@@ -364,25 +364,25 @@ export function AttendancePage() {
           { label: 'Sakit', val: counts.sakit, color: '#b56aff' },
           { label: 'Alpha', val: counts.alpha, color: '#ff4d6d' },
         ].map(s => (
-          <div key={s.label} className="card-glass rounded-xl p-2.5 text-center">
+          <div key={s.label} className="card-glass rounded-2xl p-2.5 text-center">
             <div className="text-lg font-display font-bold"
               style={{ color: s.color, textShadow: `0 0 10px ${s.color}60` }}>
               {s.val}
             </div>
-            <div className="text-[10px] font-body text-beat-muted">{s.label}</div>
+            <div className="text-[10px] font-body text-m-muted">{s.label}</div>
           </div>
         ))}
       </div>
 
       {!isClosed && (
-        <p className="text-xs font-body text-beat-muted mb-3 text-center">
-          Default <span className="text-beat-cyan">Hadir</span> · Tap status untuk ubah
+        <p className="text-xs font-body text-m-muted mb-3 text-center">
+          Default <span className="text-[var(--accent)]">Hadir</span> · Tap status untuk ubah
         </p>
       )}
 
       {isClosed && (
-        <div className="mb-3 px-3 py-2.5 rounded-xl bg-beat-yellow/5 border border-beat-yellow/20 text-center">
-          <p className="text-xs font-body text-beat-yellow">
+        <div className="mb-3 px-3 py-2.5 rounded-xl bg-amber-50 border border-m-yellow/20 text-center">
+          <p className="text-xs font-body text-m-yellow">
             Sesi sudah ditutup — tap <span className="font-semibold">Buka Lagi</span> untuk edit absensi
           </p>
         </div>
@@ -397,13 +397,13 @@ export function AttendancePage() {
           return (
             <Card key={rec.member_id} className="px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-display font-bold text-beat-bg"
+                <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-display font-bold text-white"
                   style={{ background: 'linear-gradient(135deg, #00e5ff, #007acc)', boxShadow: '0 0 8px rgba(0,229,255,0.3)' }}>
                   {member.name[0].toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-body font-medium text-beat-text truncate">{member.name}</p>
-                  <p className="text-xs font-body text-beat-muted">
+                  <p className="text-sm font-body font-medium text-m-text truncate">{member.name}</p>
+                  <p className="text-xs font-body text-m-muted">
                     {member.instrument}
                     {member.jabatan && member.jabatan !== 'Anggota' && ` · ${member.jabatan}`}
                   </p>
@@ -417,13 +417,13 @@ export function AttendancePage() {
               </div>
               {rec.status !== 'hadir' && !isClosed && (
                 <input
-                  className="mt-2 w-full bg-beat-surface rounded-lg px-3 py-2 text-xs font-body text-beat-text placeholder-beat-muted border border-beat-border focus:outline-none focus:border-beat-cyan transition-all"
+                  className="mt-2 w-full bg-white/60 rounded-lg px-3 py-2 text-xs font-body text-m-text placeholder-m-muted border border-m-border focus:outline-none focus:border-[var(--accent)] transition-all"
                   placeholder="Keterangan (opsional)"
                   value={rec.note}
                   onChange={e => setNote(rec.member_id, e.target.value)}/>
               )}
               {isClosed && rec.note && (
-                <p className="mt-1.5 text-xs font-body text-beat-muted pl-11">{rec.note}</p>
+                <p className="mt-1.5 text-xs font-body text-m-muted pl-11">{rec.note}</p>
               )}
             </Card>
           )
@@ -445,8 +445,8 @@ export function AttendancePage() {
       {/* ── Modal: Buka kembali sesi ── */}
       <Modal open={reopenModal} onClose={() => setReopenModal(false)} title="Buka Sesi Kembali">
         <div className="space-y-4">
-          <p className="text-sm font-body text-beat-sub">
-            Buka kembali sesi <span className="text-beat-text font-medium">{session.title}</span>?
+          <p className="text-sm font-body text-m-sub">
+            Buka kembali sesi <span className="text-m-text font-medium">{session.title}</span>?
             Kamu bisa mengubah absensi lagi setelah ini.
           </p>
           <div className="flex gap-2 justify-end">

@@ -1,85 +1,84 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { Link } from 'react-router-dom'
-import { ClipboardList, Users, TrendingUp, ChevronRight, Zap } from 'lucide-react'
+import { ClipboardList, Users, TrendingUp, ChevronRight } from 'lucide-react'
 import { useGroup } from '../context/AppContext'
 import { membersDB, sessionsDB, attendanceDB } from '../services/indexeddb'
-import { Card, SectionTitle, EmptyState } from '../components/ui'
+import { Card, SectionTitle, EmptyState, SkeletonCard } from '../components/ui'
 import { formatDate } from '../utils/helpers'
 import { ATTENDANCE_STATUS } from '../utils/constants'
 
+const STATUS_COLORS = {
+  hadir: { bg: 'rgba(0,180,216,0.08)',  text: '#0077a8', border: 'rgba(0,180,216,0.2)'  },
+  izin:  { bg: 'rgba(245,166,35,0.08)', text: '#b36a00', border: 'rgba(245,166,35,0.2)' },
+  sakit: { bg: 'rgba(139,92,246,0.08)', text: '#6d28d9', border: 'rgba(139,92,246,0.2)' },
+  alpha: { bg: 'rgba(240,82,82,0.08)',  text: '#c81e1e', border: 'rgba(240,82,82,0.2)'  },
+}
+
 export default function Dashboard() {
   const { activeGroup } = useGroup()
-  const [stats,  setStats]  = useState(null)
-  const [recent, setRecent] = useState([])
+  const [stats,   setStats]   = useState(null)
+  const [recent,  setRecent]  = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!activeGroup) return
+    if (!activeGroup) { setLoading(false); return }
+    setLoading(true)
     const gid = activeGroup.group_id
-    Promise.all([
-      membersDB.getByGroup(gid),
-      sessionsDB.getByGroup(gid),
-    ]).then(async ([members, sessions]) => {
-      const lastSession = sessions[0]
-      let attendanceSummary = null
-      if (lastSession) {
-        const att = await attendanceDB.getBySession(lastSession.session_id, gid)
-        const counts = {}
-        ATTENDANCE_STATUS.forEach(s => { counts[s.key] = 0 })
-        att.forEach(a => { if (counts[a.status] !== undefined) counts[a.status]++ })
-        attendanceSummary = { session: lastSession, counts, total: att.length }
-      }
-      setStats({
-        totalMembers:   members.length,
-        activeMembers:  members.filter(m => m.status === 'active').length,
-        totalSessions:  sessions.length,
-        lastAttendance: attendanceSummary,
+    Promise.all([membersDB.getByGroup(gid), sessionsDB.getByGroup(gid)])
+      .then(async ([members, sessions]) => {
+        const lastSession = sessions[0]
+        let attendanceSummary = null
+        if (lastSession) {
+          const att = await attendanceDB.getBySession(lastSession.session_id, gid)
+          const counts = {}
+          ATTENDANCE_STATUS.forEach(s => { counts[s.key] = 0 })
+          att.forEach(a => { if (counts[a.status] !== undefined) counts[a.status]++ })
+          attendanceSummary = { session: lastSession, counts, total: att.length }
+        }
+        setStats({
+          totalMembers:  members.length,
+          activeMembers: members.filter(m => m.status === 'active').length,
+          totalSessions: sessions.length,
+          lastAttendance: attendanceSummary,
+        })
+        setRecent(sessions.slice(0, 4))
+        setLoading(false)
       })
-      setRecent(sessions.slice(0, 4))
-    })
   }, [activeGroup])
 
-  if (!activeGroup) {
-    return (
-      <div className="px-4 pt-12 pb-24 max-w-2xl mx-auto flex flex-col items-center gap-4 text-center">
-        <div className="w-20 h-20 rounded-full card-glass flex items-center justify-center mb-2"
-          style={{ boxShadow: '0 0 30px rgba(0,229,255,0.15)' }}>
-          <Zap size={36} className="text-beat-cyan" style={{ filter: 'drop-shadow(0 0 8px #00e5ff)' }}/>
-        </div>
-        <h2 className="font-display text-beat-cyan text-lg neon-text-cyan">Mentor</h2>
-        <p className="text-beat-sub font-body text-sm">Buat grup pertamamu di menu <span className="text-beat-cyan">Kelola</span></p>
-      </div>
-    )
-  }
+  if (!activeGroup) return (
+    <div className="px-4 pt-16 pb-24 max-w-2xl mx-auto text-center animate-fade-in">
+      <p className="text-4xl mb-4 opacity-30">🎵</p>
+      <p className="text-m-sub font-body text-sm">Pilih grup di menu <span className="text-[var(--accent)] font-medium">Grup</span></p>
+    </div>
+  )
 
   return (
-    <div className="px-4 pt-4 pb-24 max-w-2xl mx-auto space-y-5 animate-fade-in">
+    <div className="px-4 pt-4 pb-28 max-w-2xl mx-auto space-y-5 animate-fade-in">
 
       {/* Hero card */}
-      <div className="card-glass rounded-2xl p-5 overflow-hidden relative"
-        style={{ boxShadow: '0 0 40px rgba(0,229,255,0.06), inset 0 1px 0 rgba(0,229,255,0.08)' }}>
+      <div className="card-glass rounded-2xl p-5 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%)' }}/>
-        <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full pointer-events-none"
-          style={{ background: 'radial-gradient(circle, rgba(255,230,0,0.05) 0%, transparent 70%)' }}/>
-        <p className="text-[10px] font-display text-beat-cyan uppercase tracking-[0.2em] mb-1 opacity-70">Grup Aktif</p>
-        <h1 className="font-display font-bold text-beat-yellow text-lg leading-tight neon-text-yellow">
-          {activeGroup.group_name}
-        </h1>
+          style={{ background: 'radial-gradient(circle, var(--accent-soft) 0%, transparent 70%)' }}/>
+        <p className="text-[10px] font-display font-semibold uppercase tracking-widest mb-1 neon-text">Grup Aktif</p>
+        <h1 className="font-display font-bold text-xl text-m-text leading-tight">{activeGroup.group_name}</h1>
         {activeGroup.description && (
-          <p className="text-beat-sub text-xs font-body mt-1">{activeGroup.description}</p>
+          <p className="text-m-muted text-xs font-body mt-1">{activeGroup.description}</p>
         )}
-        {stats && (
+        {loading ? (
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {[1,2,3].map(i => <div key={i} className="skeleton h-14 rounded-xl"/>)}
+          </div>
+        ) : stats && (
           <div className="grid grid-cols-3 gap-2 mt-4">
             {[
-              { label: 'Anggota Aktif', val: stats.activeMembers,  color: '#00e5ff' },
-              { label: 'Total Sesi',    val: stats.totalSessions,   color: '#ffe600' },
-              { label: 'Alumni',        val: stats.totalMembers - stats.activeMembers, color: '#b56aff' },
+              { label: 'Anggota Aktif', val: stats.activeMembers  },
+              { label: 'Total Sesi',    val: stats.totalSessions  },
+              { label: 'Alumni',        val: stats.totalMembers - stats.activeMembers },
             ].map(s => (
-              <div key={s.label} className="bg-beat-surface/50 rounded-xl p-3 text-center border border-beat-border">
-                <div className="text-2xl font-display font-bold" style={{ color: s.color, textShadow: `0 0 12px ${s.color}60` }}>
-                  {s.val}
-                </div>
-                <div className="text-[10px] font-body text-beat-muted mt-0.5">{s.label}</div>
+              <div key={s.label} className="bg-white/60 rounded-xl p-3 text-center border border-m-border">
+                <div className="text-2xl font-display font-bold text-[var(--accent)]">{s.val}</div>
+                <div className="text-[10px] font-body text-m-muted mt-0.5 leading-tight">{s.label}</div>
               </div>
             ))}
           </div>
@@ -93,30 +92,25 @@ export default function Dashboard() {
           <Card className="p-4">
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="font-body text-sm text-beat-text font-medium">
-                  {stats.lastAttendance.session.title}
-                </p>
-                <p className="font-body text-xs text-beat-muted">
-                  {formatDate(stats.lastAttendance.session.session_date)}
-                </p>
+                <p className="font-body text-sm text-m-text font-semibold">{stats.lastAttendance.session.title}</p>
+                <p className="font-body text-xs text-m-muted">{formatDate(stats.lastAttendance.session.session_date)}</p>
               </div>
               <Link to={`/sessions/${stats.lastAttendance.session.session_id}`}
-                className="text-xs text-beat-cyan font-body flex items-center gap-0.5 hover:neon-text-cyan">
+                className="text-xs neon-text font-body flex items-center gap-0.5 font-medium">
                 Detail <ChevronRight size={12}/>
               </Link>
             </div>
             <div className="grid grid-cols-4 gap-2">
               {[
-                { label: 'Hadir', val: stats.lastAttendance.counts.hadir,  color: '#00e5ff' },
-                { label: 'Izin',  val: stats.lastAttendance.counts.izin,   color: '#ffe600' },
-                { label: 'Sakit', val: stats.lastAttendance.counts.sakit,  color: '#b56aff' },
-                { label: 'Alpha', val: stats.lastAttendance.counts.alpha,  color: '#ff4d6d' },
+                { label: 'Hadir', val: stats.lastAttendance.counts.hadir, key: 'hadir' },
+                { label: 'Izin',  val: stats.lastAttendance.counts.izin,  key: 'izin'  },
+                { label: 'Sakit', val: stats.lastAttendance.counts.sakit, key: 'sakit' },
+                { label: 'Alpha', val: stats.lastAttendance.counts.alpha, key: 'alpha' },
               ].map(s => (
-                <div key={s.label} className="bg-beat-surface rounded-lg p-2 text-center border border-beat-border">
-                  <div className="text-lg font-display font-bold" style={{ color: s.color, textShadow: `0 0 10px ${s.color}60` }}>
-                    {s.val}
-                  </div>
-                  <div className="text-[10px] font-body text-beat-muted">{s.label}</div>
+                <div key={s.label} className="rounded-xl p-2 text-center border"
+                  style={{ background: STATUS_COLORS[s.key].bg, borderColor: STATUS_COLORS[s.key].border }}>
+                  <div className="text-lg font-display font-bold" style={{ color: STATUS_COLORS[s.key].text }}>{s.val}</div>
+                  <div className="text-[10px] font-body text-m-muted">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -127,17 +121,16 @@ export default function Dashboard() {
       {/* Quick actions */}
       <div>
         <SectionTitle>Aksi Cepat</SectionTitle>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-2.5">
           {[
-            { to: '/sessions', icon: ClipboardList, label: 'Sesi Baru', color: '#00e5ff', glow: 'rgba(0,229,255,0.2)' },
-            { to: '/members',  icon: Users,         label: 'Anggota',   color: '#ffe600', glow: 'rgba(255,230,0,0.2)'  },
-            { to: '/stats',    icon: TrendingUp,    label: 'Stats',     color: '#b56aff', glow: 'rgba(181,106,255,0.2)'},
+            { to: '/sessions', icon: ClipboardList, label: 'Sesi Baru' },
+            { to: '/members',  icon: Users,         label: 'Anggota'   },
+            { to: '/stats',    icon: TrendingUp,    label: 'Stats'     },
           ].map(a => (
             <Link key={a.to} to={a.to}
-              className="card-glass rounded-xl p-4 flex flex-col items-center gap-2 hover:scale-105 transition-all active:scale-95"
-              style={{ '--hover-glow': a.glow }}>
-              <a.icon size={22} style={{ color: a.color, filter: `drop-shadow(0 0 6px ${a.color})` }}/>
-              <span className="text-xs font-body text-beat-sub">{a.label}</span>
+              className="card-glass rounded-2xl p-4 flex flex-col items-center gap-2 hover:shadow-card-lift transition-all active:scale-95">
+              <a.icon size={20} style={{ color: 'var(--accent)' }}/>
+              <span className="text-xs font-body font-medium text-m-sub">{a.label}</span>
             </Link>
           ))}
         </div>
@@ -150,20 +143,20 @@ export default function Dashboard() {
           <div className="space-y-2">
             {recent.map(s => (
               <Link key={s.session_id} to={`/sessions/${s.session_id}`}
-                className="flex items-center justify-between card-glass rounded-xl px-4 py-3 hover:border-beat-cyan/25 transition-all">
-                <div>
-                  <p className="text-sm font-body text-beat-text font-medium">{s.title}</p>
-                  <p className="text-xs font-body text-beat-muted">{formatDate(s.session_date)}</p>
+                className="flex items-center justify-between card-glass rounded-2xl px-4 py-3 hover:shadow-card-md transition-all">
+                <div className="min-w-0">
+                  <p className="text-sm font-body text-m-text font-medium truncate">{s.title}</p>
+                  <p className="text-xs font-body text-m-muted">{formatDate(s.session_date)}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] border rounded px-1.5 py-0.5 font-body ${
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className={`text-[10px] border rounded-lg px-2 py-0.5 font-body font-medium ${
                     s.status === 'open'
-                      ? 'text-beat-cyan border-beat-cyan/30 bg-beat-cyan/5'
-                      : 'text-beat-muted border-beat-border'
+                      ? 'text-[var(--accent)] border-[var(--accent-glow)] bg-[var(--accent-soft)]'
+                      : 'text-m-muted border-m-border bg-slate-50'
                   }`}>
                     {s.status === 'open' ? 'Open' : 'Closed'}
                   </span>
-                  <ChevronRight size={13} className="text-beat-muted"/>
+                  <ChevronRight size={13} className="text-m-muted"/>
                 </div>
               </Link>
             ))}
