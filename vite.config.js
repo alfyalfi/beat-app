@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/mentor-app/',
+  base: '/beat-app/',
   plugins: [
     react(),
     VitePWA({
@@ -17,8 +17,8 @@ export default defineConfig({
         background_color: '#050508',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/mentor-app/',
-        scope: '/mentor-app/',
+        start_url: '/beat-app/',
+        scope: '/beat-app/',
         lang: 'id',
         categories: ['productivity', 'utilities'],
         icons: [
