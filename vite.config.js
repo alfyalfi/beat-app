@@ -3,22 +3,22 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
-  base: '/beat-app/',
+  base: '/mentor-app/',
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png', 'icons/*.svg'],
       manifest: {
-        name: 'BEAT — Band Entry & Attendance Tracker',
-        short_name: 'BEAT',
-        description: 'Catat absensi latihan band dan perkembangan skill anggota',
+        name: 'Mentor — Manajemen Anggota Band',
+        short_name: 'Mentor',
+        description: 'Catat absensi latihan, kelola anggota, dan pantau perkembangan skill',
         theme_color: '#050508',
         background_color: '#050508',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/beat-app/',
-        scope: '/beat-app/',
+        start_url: '/mentor-app/',
+        scope: '/mentor-app/',
         lang: 'id',
         categories: ['productivity', 'utilities'],
         icons: [

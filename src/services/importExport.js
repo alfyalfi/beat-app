@@ -91,7 +91,7 @@ export async function exportGroupToExcel(group_id, group_name) {
     }
   })
 
-  XLSX.writeFile(wb, `BEAT_${group_name}_${dateStamp()}.xlsx`)
+  XLSX.writeFile(wb, `MENTOR_${group_name}_${dateStamp()}.xlsx`)
 }
 
 export async function createBackup(group_id) {
@@ -111,7 +111,7 @@ export async function createBackup(group_id) {
   }
 
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
-  downloadBlob(blob, `BEAT_backup_${group_id}_${dateStamp()}.json`)
+  downloadBlob(blob, `MENTOR_backup_${group_id}_${dateStamp()}.json`)
 }
 
 export async function restoreBackup(file) {

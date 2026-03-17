@@ -1,5 +1,5 @@
 {
-  "name": "beat-app",
+  "name": "mentor-app",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,8 @@
     "recharts": "^2.13.0",
     "dexie": "^4.0.8",
     "xlsx": "^0.18.5",
-    "lucide-react": "^0.447.0"
+    "lucide-react": "^0.447.0",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.11",

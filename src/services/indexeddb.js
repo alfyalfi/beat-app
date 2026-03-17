@@ -1,6 +1,6 @@
 import Dexie from 'dexie'
 
-export const db = new Dexie('BeatDB')
+export const db = new Dexie('MentorDB')
 
 db.version(1).stores({
   groups:        'group_id, is_active',

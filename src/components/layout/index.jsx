@@ -31,7 +31,7 @@ export function Navbar() {
       style={{ boxShadow: '0 1px 0 rgba(0,229,255,0.08)' }}>
       <div className="flex items-center justify-between px-4 h-14 max-w-2xl mx-auto">
         <NavLink to="/" className="font-display font-black text-xl tracking-widest text-beat-cyan neon-text-cyan">
-          BEAT
+          Mentor
         </NavLink>
 
         <div className="relative" ref={dropRef}>

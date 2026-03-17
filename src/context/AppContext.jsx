@@ -13,7 +13,7 @@ export function GroupProvider({ children }) {
   const loadGroups = useCallback(async () => {
     const gs = await groupsDB.getAll()
     setGroups(gs)
-    const lastId = localStorage.getItem('beat_active_group')
+    const lastId = localStorage.getItem('mentor_active_group')
     const found  = gs.find(g => g.group_id === lastId) ?? gs[0] ?? null
     setActiveGroupState(found)
     setLoading(false)
@@ -23,7 +23,7 @@ export function GroupProvider({ children }) {
 
   const setActiveGroup = useCallback((g) => {
     setActiveGroupState(g)
-    if (g) localStorage.setItem('beat_active_group', g.group_id)
+    if (g) localStorage.setItem('mentor_active_group', g.group_id)
   }, [])
 
   const refreshGroups = useCallback(async () => {

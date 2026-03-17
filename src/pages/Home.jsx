@@ -148,7 +148,7 @@ export default function Home() {
           </div>
         </div>
         <h1 className="font-display font-black text-3xl text-beat-cyan neon-text-cyan tracking-widest mb-2">
-          BEAT
+          Mentor
         </h1>
         <p className="text-beat-sub font-body text-sm">
           {groups.length === 0

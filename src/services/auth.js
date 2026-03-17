@@ -3,9 +3,9 @@
 
 const CLIENT_ID  = import.meta.env.VITE_OAUTH_CLIENT_ID || ''
 const SCOPES     = 'https://www.googleapis.com/auth/spreadsheets'
-const TOKEN_KEY  = 'beat_oauth_token'
-const EXPIRY_KEY = 'beat_oauth_expiry'
-const USER_KEY   = 'beat_oauth_user'
+const TOKEN_KEY  = 'mentor_oauth_token'
+const EXPIRY_KEY = 'mentor_oauth_expiry'
+const USER_KEY   = 'mentor_oauth_user'
 
 let tokenClient = null
 

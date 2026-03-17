@@ -45,7 +45,7 @@ export default function Dashboard() {
           style={{ boxShadow: '0 0 30px rgba(0,229,255,0.15)' }}>
           <Zap size={36} className="text-beat-cyan" style={{ filter: 'drop-shadow(0 0 8px #00e5ff)' }}/>
         </div>
-        <h2 className="font-display text-beat-cyan text-lg neon-text-cyan">BEAT</h2>
+        <h2 className="font-display text-beat-cyan text-lg neon-text-cyan">Mentor</h2>
         <p className="text-beat-sub font-body text-sm">Buat grup pertamamu di menu <span className="text-beat-cyan">Kelola</span></p>
       </div>
     )
